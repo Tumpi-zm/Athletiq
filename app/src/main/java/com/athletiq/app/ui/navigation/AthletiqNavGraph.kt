@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.athletiq.app.ui.catalog.CatalogScreen
 import com.athletiq.app.ui.history.HistoryScreen
+import com.athletiq.app.ui.overview.ProgramOverviewScreen
 import com.athletiq.app.ui.programs.MyProgramsScreen
 import com.athletiq.app.ui.settings.SettingsScreen
 import com.athletiq.app.ui.today.TodayScreen
@@ -56,6 +57,9 @@ fun AthletiqNavGraph(
                 },
                 onNavigateToSettings = {
                     navController.navigate(Routes.Settings)
+                },
+                onViewProgram = { programId ->
+                    navController.navigate(Routes.ProgramOverview(programId = programId))
                 }
             )
         }
@@ -122,6 +126,12 @@ fun AthletiqNavGraph(
         // ── Settings ───────────────────────────────────────────────────────────
         composable<Routes.Settings> {
             SettingsScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable<Routes.ProgramOverview> {
+            ProgramOverviewScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }

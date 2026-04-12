@@ -56,6 +56,9 @@ object Routes {
     /** Settings screen (units, rest timer defaults, notifications). */
     @Serializable
     data object Settings
+
+    @Serializable
+    data class ProgramOverview(val programId: Long)
 }
 
 // End of Routes.kt — Type-safe navigation route definitions for Compose Navigation.

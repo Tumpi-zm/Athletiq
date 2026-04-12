@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -59,6 +61,7 @@ fun CatalogScreen(
     onProgramStarted: () -> Unit,
     onNavigateToMyPrograms: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    onViewProgram: (Long) -> Unit = {},
     viewModel: CatalogViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -178,7 +181,8 @@ fun CatalogScreen(
                         items(state.programs, key = { it.program.id }) { overview ->
                             ProgramCard(
                                 overview = overview,
-                                onStartProgram = { viewModel.startProgram(overview.program.id) }
+                                onStartProgram = { viewModel.startProgram(overview.program.id) },
+                                onViewProgram = { onViewProgram(overview.program.id) }
                             )
                         }
                     }
@@ -198,7 +202,8 @@ fun CatalogScreen(
 @Composable
 private fun ProgramCard(
     overview: ProgramOverview,
-    onStartProgram: () -> Unit
+    onStartProgram: () -> Unit,
+    onViewProgram: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -247,11 +252,22 @@ private fun ProgramCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = onStartProgram,
-                modifier = Modifier.fillMaxWidth()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("Start Program")
+                OutlinedButton(
+                    onClick = onViewProgram,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("View Program")
+                }
+                Button(
+                    onClick = onStartProgram,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Start Program")
+                }
             }
         }
     }

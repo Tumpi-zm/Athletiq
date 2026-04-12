@@ -3,6 +3,7 @@ package com.athletiq.app;
 import com.athletiq.app.di.DatabaseModule;
 import com.athletiq.app.ui.catalog.CatalogViewModel_HiltModules;
 import com.athletiq.app.ui.history.HistoryViewModel_HiltModules;
+import com.athletiq.app.ui.overview.ProgramOverviewViewModel_HiltModules;
 import com.athletiq.app.ui.programs.MyProgramsViewModel_HiltModules;
 import com.athletiq.app.ui.settings.SettingsViewModel_HiltModules;
 import com.athletiq.app.ui.today.TodayViewModel_HiltModules;
@@ -165,6 +166,7 @@ public final class AthletiqApp_HiltComponents {
           HiltWrapper_SavedStateHandleModule.class,
           HistoryViewModel_HiltModules.KeyModule.class,
           MyProgramsViewModel_HiltModules.KeyModule.class,
+          ProgramOverviewViewModel_HiltModules.KeyModule.class,
           SettingsViewModel_HiltModules.KeyModule.class,
           TodayViewModel_HiltModules.KeyModule.class,
           WorkoutViewModel_HiltModules.KeyModule.class
@@ -207,6 +209,7 @@ public final class AthletiqApp_HiltComponents {
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           HistoryViewModel_HiltModules.BindsModule.class,
           MyProgramsViewModel_HiltModules.BindsModule.class,
+          ProgramOverviewViewModel_HiltModules.BindsModule.class,
           SettingsViewModel_HiltModules.BindsModule.class,
           TodayViewModel_HiltModules.BindsModule.class,
           WorkoutViewModel_HiltModules.BindsModule.class

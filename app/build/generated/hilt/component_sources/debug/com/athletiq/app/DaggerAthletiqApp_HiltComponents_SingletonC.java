@@ -25,6 +25,8 @@ import com.athletiq.app.ui.catalog.CatalogViewModel;
 import com.athletiq.app.ui.catalog.CatalogViewModel_HiltModules;
 import com.athletiq.app.ui.history.HistoryViewModel;
 import com.athletiq.app.ui.history.HistoryViewModel_HiltModules;
+import com.athletiq.app.ui.overview.ProgramOverviewViewModel;
+import com.athletiq.app.ui.overview.ProgramOverviewViewModel_HiltModules;
 import com.athletiq.app.ui.programs.MyProgramsViewModel;
 import com.athletiq.app.ui.programs.MyProgramsViewModel_HiltModules;
 import com.athletiq.app.ui.settings.SettingsViewModel;
@@ -395,7 +397,7 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(6).put(LazyClassKeyProvider.com_athletiq_app_ui_catalog_CatalogViewModel, CatalogViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_history_HistoryViewModel, HistoryViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_programs_MyProgramsViewModel, MyProgramsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_settings_SettingsViewModel, SettingsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_today_TodayViewModel, TodayViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_workout_WorkoutViewModel, WorkoutViewModel_HiltModules.KeyModule.provide()).build());
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(7).put(LazyClassKeyProvider.com_athletiq_app_ui_catalog_CatalogViewModel, CatalogViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_history_HistoryViewModel, HistoryViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_programs_MyProgramsViewModel, MyProgramsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_overview_ProgramOverviewViewModel, ProgramOverviewViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_settings_SettingsViewModel, SettingsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_today_TodayViewModel, TodayViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_athletiq_app_ui_workout_WorkoutViewModel, WorkoutViewModel_HiltModules.KeyModule.provide()).build());
     }
 
     @Override
@@ -422,11 +424,13 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_athletiq_app_ui_history_HistoryViewModel = "com.athletiq.app.ui.history.HistoryViewModel";
-
       static String com_athletiq_app_ui_settings_SettingsViewModel = "com.athletiq.app.ui.settings.SettingsViewModel";
 
+      static String com_athletiq_app_ui_overview_ProgramOverviewViewModel = "com.athletiq.app.ui.overview.ProgramOverviewViewModel";
+
       static String com_athletiq_app_ui_today_TodayViewModel = "com.athletiq.app.ui.today.TodayViewModel";
+
+      static String com_athletiq_app_ui_history_HistoryViewModel = "com.athletiq.app.ui.history.HistoryViewModel";
 
       static String com_athletiq_app_ui_workout_WorkoutViewModel = "com.athletiq.app.ui.workout.WorkoutViewModel";
 
@@ -435,13 +439,16 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
       static String com_athletiq_app_ui_programs_MyProgramsViewModel = "com.athletiq.app.ui.programs.MyProgramsViewModel";
 
       @KeepFieldType
-      HistoryViewModel com_athletiq_app_ui_history_HistoryViewModel2;
-
-      @KeepFieldType
       SettingsViewModel com_athletiq_app_ui_settings_SettingsViewModel2;
 
       @KeepFieldType
+      ProgramOverviewViewModel com_athletiq_app_ui_overview_ProgramOverviewViewModel2;
+
+      @KeepFieldType
       TodayViewModel com_athletiq_app_ui_today_TodayViewModel2;
+
+      @KeepFieldType
+      HistoryViewModel com_athletiq_app_ui_history_HistoryViewModel2;
 
       @KeepFieldType
       WorkoutViewModel com_athletiq_app_ui_workout_WorkoutViewModel2;
@@ -455,6 +462,8 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
   }
 
   private static final class ViewModelCImpl extends AthletiqApp_HiltComponents.ViewModelC {
+    private final SavedStateHandle savedStateHandle;
+
     private final SingletonCImpl singletonCImpl;
 
     private final ActivityRetainedCImpl activityRetainedCImpl;
@@ -467,6 +476,8 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
 
     private Provider<MyProgramsViewModel> myProgramsViewModelProvider;
 
+    private Provider<ProgramOverviewViewModel> programOverviewViewModelProvider;
+
     private Provider<SettingsViewModel> settingsViewModelProvider;
 
     private Provider<TodayViewModel> todayViewModelProvider;
@@ -478,7 +489,7 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
         ViewModelLifecycle viewModelLifecycleParam) {
       this.singletonCImpl = singletonCImpl;
       this.activityRetainedCImpl = activityRetainedCImpl;
-
+      this.savedStateHandle = savedStateHandleParam;
       initialize(savedStateHandleParam, viewModelLifecycleParam);
 
     }
@@ -501,14 +512,15 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
       this.catalogViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
       this.historyViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
       this.myProgramsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
-      this.settingsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
-      this.todayViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
-      this.workoutViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
+      this.programOverviewViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
+      this.settingsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.todayViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
+      this.workoutViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(6).put(LazyClassKeyProvider.com_athletiq_app_ui_catalog_CatalogViewModel, ((Provider) catalogViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_history_HistoryViewModel, ((Provider) historyViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_programs_MyProgramsViewModel, ((Provider) myProgramsViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_settings_SettingsViewModel, ((Provider) settingsViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_today_TodayViewModel, ((Provider) todayViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_workout_WorkoutViewModel, ((Provider) workoutViewModelProvider)).build());
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(7).put(LazyClassKeyProvider.com_athletiq_app_ui_catalog_CatalogViewModel, ((Provider) catalogViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_history_HistoryViewModel, ((Provider) historyViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_programs_MyProgramsViewModel, ((Provider) myProgramsViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_overview_ProgramOverviewViewModel, ((Provider) programOverviewViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_settings_SettingsViewModel, ((Provider) settingsViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_today_TodayViewModel, ((Provider) todayViewModelProvider)).put(LazyClassKeyProvider.com_athletiq_app_ui_workout_WorkoutViewModel, ((Provider) workoutViewModelProvider)).build());
     }
 
     @Override
@@ -520,18 +532,29 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
     private static final class LazyClassKeyProvider {
       static String com_athletiq_app_ui_history_HistoryViewModel = "com.athletiq.app.ui.history.HistoryViewModel";
 
+      static String com_athletiq_app_ui_overview_ProgramOverviewViewModel = "com.athletiq.app.ui.overview.ProgramOverviewViewModel";
+
+      static String com_athletiq_app_ui_settings_SettingsViewModel = "com.athletiq.app.ui.settings.SettingsViewModel";
+
+      static String com_athletiq_app_ui_programs_MyProgramsViewModel = "com.athletiq.app.ui.programs.MyProgramsViewModel";
+
       static String com_athletiq_app_ui_today_TodayViewModel = "com.athletiq.app.ui.today.TodayViewModel";
 
       static String com_athletiq_app_ui_workout_WorkoutViewModel = "com.athletiq.app.ui.workout.WorkoutViewModel";
 
-      static String com_athletiq_app_ui_settings_SettingsViewModel = "com.athletiq.app.ui.settings.SettingsViewModel";
-
       static String com_athletiq_app_ui_catalog_CatalogViewModel = "com.athletiq.app.ui.catalog.CatalogViewModel";
-
-      static String com_athletiq_app_ui_programs_MyProgramsViewModel = "com.athletiq.app.ui.programs.MyProgramsViewModel";
 
       @KeepFieldType
       HistoryViewModel com_athletiq_app_ui_history_HistoryViewModel2;
+
+      @KeepFieldType
+      ProgramOverviewViewModel com_athletiq_app_ui_overview_ProgramOverviewViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_athletiq_app_ui_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      MyProgramsViewModel com_athletiq_app_ui_programs_MyProgramsViewModel2;
 
       @KeepFieldType
       TodayViewModel com_athletiq_app_ui_today_TodayViewModel2;
@@ -540,13 +563,7 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
       WorkoutViewModel com_athletiq_app_ui_workout_WorkoutViewModel2;
 
       @KeepFieldType
-      SettingsViewModel com_athletiq_app_ui_settings_SettingsViewModel2;
-
-      @KeepFieldType
       CatalogViewModel com_athletiq_app_ui_catalog_CatalogViewModel2;
-
-      @KeepFieldType
-      MyProgramsViewModel com_athletiq_app_ui_programs_MyProgramsViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -579,13 +596,16 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
           case 2: // com.athletiq.app.ui.programs.MyProgramsViewModel 
           return (T) new MyProgramsViewModel(singletonCImpl.enrollmentRepositoryProvider.get(), singletonCImpl.programRepositoryProvider.get());
 
-          case 3: // com.athletiq.app.ui.settings.SettingsViewModel 
+          case 3: // com.athletiq.app.ui.overview.ProgramOverviewViewModel 
+          return (T) new ProgramOverviewViewModel(viewModelCImpl.savedStateHandle, singletonCImpl.programRepositoryProvider.get());
+
+          case 4: // com.athletiq.app.ui.settings.SettingsViewModel 
           return (T) new SettingsViewModel();
 
-          case 4: // com.athletiq.app.ui.today.TodayViewModel 
+          case 5: // com.athletiq.app.ui.today.TodayViewModel 
           return (T) new TodayViewModel(singletonCImpl.enrollmentRepositoryProvider.get(), singletonCImpl.programRepositoryProvider.get(), viewModelCImpl.getTodaySessionUseCase(), viewModelCImpl.abandonProgramUseCase());
 
-          case 5: // com.athletiq.app.ui.workout.WorkoutViewModel 
+          case 6: // com.athletiq.app.ui.workout.WorkoutViewModel 
           return (T) new WorkoutViewModel(singletonCImpl.programRepositoryProvider.get(), singletonCImpl.workoutLogRepositoryProvider.get(), singletonCImpl.enrollmentRepositoryProvider.get());
 
           default: throw new AssertionError(id);
