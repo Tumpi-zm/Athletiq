@@ -1,5 +1,6 @@
 package com.athletiq.app.ui.today
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,10 +11,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SelfImprovement
@@ -28,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -41,31 +47,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.athletiq.app.domain.model.BlockType
 import com.athletiq.app.domain.model.SessionDetail
 import com.athletiq.app.domain.usecase.AbandonProgramResult
+import com.athletiq.app.domain.usecase.WeekDaySummary
 import com.athletiq.app.ui.components.ProgramProgressBar
 
-/**
- * Today screen — shows the current training day's session or rest day info.
- *
- * This is the home screen when a program is active. It displays:
- * - Current week and day name.
- * - Program progress bar.
- * - Session overview with all blocks and exercises.
- * - "Start Workout" button to begin guided execution.
- * - Abandon program option in the app bar.
- *
- * @param onStartWorkout Callback with (sessionId, enrollmentId, dayId) to navigate to workout.
- * @param onProgramAbandoned Callback when the program has been successfully abandoned.
- * @param onNavigateToHistory Navigate to workout history.
- * @param onNavigateToMyPrograms Navigate to My Programs.
- * @param onNavigateToSettings Navigate to Settings.
- * @param viewModel The ViewModel provided by Hilt.
- */
+private val DAY_LABELS = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodayScreen(
@@ -80,7 +73,6 @@ fun TodayScreen(
     val abandonEvent by viewModel.abandonEvent.collectAsStateWithLifecycle()
     var showAbandonDialog by remember { mutableStateOf(false) }
 
-    // Handle abandon result.
     LaunchedEffect(abandonEvent) {
         if (abandonEvent is AbandonProgramResult.Success) {
             viewModel.clearAbandonEvent()
@@ -88,26 +80,18 @@ fun TodayScreen(
         }
     }
 
-    // Redirect to catalog if no active program.
     LaunchedEffect(uiState) {
         if (uiState is TodayUiState.NoActiveProgram) {
             onProgramAbandoned()
         }
     }
 
-    // Abandon confirmation dialog.
     if (showAbandonDialog) {
         val state = uiState
-        val programName = when (state) {
-            is TodayUiState.TrainingDay -> state.program.name
-            is TodayUiState.RestDay -> state.program.name
-            else -> "this program"
-        }
-        val weekInfo = when (state) {
-            is TodayUiState.TrainingDay -> "Week ${state.weekNumber} of ${state.program.durationWeeks}"
-            is TodayUiState.RestDay -> "Week ${state.weekNumber} of ${state.program.durationWeeks}"
-            else -> ""
-        }
+        val programName = (state as? TodayUiState.WeekView)?.program?.name ?: "this program"
+        val weekInfo = (state as? TodayUiState.WeekView)?.let {
+            "Week ${it.weekNumber} of ${it.program.durationWeeks}"
+        } ?: ""
 
         AlertDialog(
             onDismissRequest = { showAbandonDialog = false },
@@ -173,22 +157,20 @@ fun TodayScreen(
                 }
             }
 
-            is TodayUiState.TrainingDay -> {
-                TrainingDayContent(
+            is TodayUiState.WeekView -> {
+                WeekViewContent(
                     state = state,
                     paddingValues = paddingValues,
+                    onDaySelected = { viewModel.selectDay(it) },
                     onStartWorkout = { sessionDetail ->
+                        val dayEntity = state.selectedDaySummary.dayEntity ?: return@WeekViewContent
                         onStartWorkout(
                             sessionDetail.session.id,
                             state.enrollment.id,
-                            sessionDetail.day.id
+                            dayEntity.id
                         )
                     }
                 )
-            }
-
-            is TodayUiState.RestDay -> {
-                RestDayContent(state = state, paddingValues = paddingValues)
             }
 
             is TodayUiState.ProgramComplete -> {
@@ -234,13 +216,13 @@ fun TodayScreen(
     }
 }
 
-/**
- * Content for a training day — shows session overview with blocks and exercises.
- */
+// ── Week View ────────────────────────────────────────────────────────────────
+
 @Composable
-private fun TrainingDayContent(
-    state: TodayUiState.TrainingDay,
+private fun WeekViewContent(
+    state: TodayUiState.WeekView,
     paddingValues: PaddingValues,
+    onDaySelected: (Int) -> Unit,
     onStartWorkout: (SessionDetail) -> Unit
 ) {
     LazyColumn(
@@ -250,7 +232,7 @@ private fun TrainingDayContent(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Header: Week + Day info.
+        // Week header + progress.
         item {
             Column {
                 Text(
@@ -258,12 +240,7 @@ private fun TrainingDayContent(
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Text(
-                    text = state.dayName,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 ProgramProgressBar(
                     completedDays = state.completedDays,
                     totalDays = state.totalTrainingDays
@@ -271,19 +248,111 @@ private fun TrainingDayContent(
             }
         }
 
-        // Session cards with exercise previews.
-        items(state.sessions) { sessionDetail ->
-            SessionPreviewCard(
-                sessionDetail = sessionDetail,
-                onStartWorkout = { onStartWorkout(sessionDetail) }
+        // Day selector bar.
+        item {
+            DaySelectorRow(
+                days = state.days,
+                todayDayOfWeek = state.todayDayOfWeek,
+                selectedDayOfWeek = state.selectedDayOfWeek,
+                onDaySelected = onDaySelected
             )
+        }
+
+        // Selected day name.
+        item {
+            Text(
+                text = state.selectedDaySummary.dayName,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        // Day content: sessions or rest day.
+        if (state.selectedDaySummary.isRestDay) {
+            item {
+                RestDayCard(notes = state.selectedDaySummary.restDayNotes)
+            }
+        } else {
+            items(state.selectedDaySessions) { sessionDetail ->
+                SessionPreviewCard(
+                    sessionDetail = sessionDetail,
+                    onStartWorkout = { onStartWorkout(sessionDetail) }
+                )
+            }
         }
     }
 }
 
-/**
- * Card previewing a session's blocks and exercises with a "Start Workout" button.
- */
+// ── Day Selector Row ─────────────────────────────────────────────────────────
+
+@Composable
+private fun DaySelectorRow(
+    days: List<WeekDaySummary>,
+    todayDayOfWeek: Int,
+    selectedDayOfWeek: Int,
+    onDaySelected: (Int) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        days.forEach { day ->
+            val isSelected = day.dayOfWeek == selectedDayOfWeek
+            val isToday = day.dayOfWeek == todayDayOfWeek
+            val isTraining = !day.isRestDay
+
+            val containerColor = when {
+                isSelected -> MaterialTheme.colorScheme.primary
+                else -> MaterialTheme.colorScheme.surface
+            }
+            val contentColor = when {
+                isSelected -> MaterialTheme.colorScheme.onPrimary
+                isTraining -> MaterialTheme.colorScheme.onSurface
+                else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+            }
+            val border = if (isToday && !isSelected) {
+                BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+            } else {
+                null
+            }
+
+            Surface(
+                onClick = { onDaySelected(day.dayOfWeek) },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp),
+                shape = RoundedCornerShape(8.dp),
+                color = containerColor,
+                contentColor = contentColor,
+                border = border,
+                tonalElevation = if (isSelected) 0.dp else 1.dp
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(2.dp)
+                ) {
+                    Text(
+                        text = DAY_LABELS[day.dayOfWeek - 1],
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal,
+                        textAlign = TextAlign.Center
+                    )
+                    if (isTraining) {
+                        Icon(
+                            imageVector = Icons.Default.FitnessCenter,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ── Session Preview Card ─────────────────────────────────────────────────────
+
 @Composable
 private fun SessionPreviewCard(
     sessionDetail: SessionDetail,
@@ -303,9 +372,7 @@ private fun SessionPreviewCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // List blocks with their exercises.
             sessionDetail.blocks.forEach { blockWithExercises ->
-                val blockTypeName = BlockType.fromString(blockWithExercises.block.blockType).name
                 Text(
                     text = blockWithExercises.block.name,
                     style = MaterialTheme.typography.titleSmall,
@@ -330,86 +397,55 @@ private fun SessionPreviewCard(
                 onClick = onStartWorkout,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = null
-                )
-                Text(
-                    text = "  Start Workout",
-                    style = MaterialTheme.typography.labelLarge
-                )
+                Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
+                Text(text = "  Start Workout", style = MaterialTheme.typography.labelLarge)
             }
         }
     }
 }
 
-/**
- * Content for a rest day — shows recovery suggestions.
- */
+// ── Rest Day Card ────────────────────────────────────────────────────────────
+
 @Composable
-private fun RestDayContent(
-    state: TodayUiState.RestDay,
-    paddingValues: PaddingValues
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+private fun RestDayCard(notes: String?) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     ) {
-        Icon(
-            imageVector = Icons.Default.SelfImprovement,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Column(
+            modifier = Modifier
+                .padding(24.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.SelfImprovement,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(48.dp)
+            )
 
-        Text(
-            text = "Rest Day",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
+            Spacer(modifier = Modifier.height(12.dp))
 
-        Text(
-            text = "Week ${state.weekNumber} · ${state.program.name}",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+            Text(
+                text = "Rest Day",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ProgramProgressBar(
-            completedDays = state.completedDays,
-            totalDays = state.totalTrainingDays,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        if (!state.notes.isNullOrBlank()) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+            if (!notes.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = notes,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
                 )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Recovery Suggestions",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = state.notes,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
             }
         }
     }
 }
 
-// End of TodayScreen.kt — Home screen showing today's training session or rest day.
+// End of TodayScreen.kt

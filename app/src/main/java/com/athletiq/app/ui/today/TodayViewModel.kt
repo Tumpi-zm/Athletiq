@@ -6,31 +6,19 @@ import com.athletiq.app.data.local.entity.EnrollmentEntity
 import com.athletiq.app.data.local.entity.ProgramEntity
 import com.athletiq.app.data.repository.EnrollmentRepository
 import com.athletiq.app.data.repository.ProgramRepository
+import com.athletiq.app.domain.model.SessionDetail
 import com.athletiq.app.domain.usecase.AbandonProgramResult
 import com.athletiq.app.domain.usecase.AbandonProgramUseCase
 import com.athletiq.app.domain.usecase.GetTodaySessionUseCase
-import com.athletiq.app.domain.usecase.TodaySessionResult
+import com.athletiq.app.domain.usecase.WeekDaySummary
+import com.athletiq.app.domain.usecase.WeekScheduleResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel for the Today screen — the home screen when a program is active.
- *
- * **Screen:** [TodayScreen]
- *
- * **State managed:**
- * - [uiState]: Today's session info (training day details or rest day), loading, or error.
- * - [abandonEvent]: One-shot event for the result of abandoning the current program.
- *
- * **User actions handled:**
- * - View today's scheduled training session.
- * - Abandon the current program (triggers confirmation in UI, then calls [AbandonProgramUseCase]).
- */
 @HiltViewModel
 class TodayViewModel @Inject constructor(
     private val enrollmentRepository: EnrollmentRepository,
@@ -49,12 +37,6 @@ class TodayViewModel @Inject constructor(
         observeActiveEnrollment()
     }
 
-    /**
-     * Observes the active enrollment and resolves today's session whenever it changes.
-     *
-     * When a new enrollment is activated (or the current one is abandoned), this
-     * automatically recalculates what the user should train today.
-     */
     private fun observeActiveEnrollment() {
         viewModelScope.launch {
             enrollmentRepository.getActiveEnrollment()
@@ -63,61 +45,76 @@ class TodayViewModel @Inject constructor(
                         _uiState.value = TodayUiState.NoActiveProgram
                         return@collect
                     }
-                    resolveTodaySession(enrollment)
+                    resolveWeekSchedule(enrollment)
                 }
         }
     }
 
-    /**
-     * Resolves today's session using the GetTodaySessionUseCase.
-     *
-     * @param enrollment The currently active enrollment.
-     */
-    private suspend fun resolveTodaySession(enrollment: EnrollmentEntity) {
+    private suspend fun resolveWeekSchedule(enrollment: EnrollmentEntity) {
         val program = programRepository.getProgramById(enrollment.programId)
             ?: run {
                 _uiState.value = TodayUiState.Error("Program not found")
                 return
             }
 
-        val result = getTodaySessionUseCase(enrollment)
         val totalTrainingDays = programRepository.getTotalTrainingDays(enrollment.programId)
 
-        _uiState.value = when (result) {
-            is TodaySessionResult.TrainingDay -> TodayUiState.TrainingDay(
-                enrollment = enrollment,
-                program = program,
-                weekNumber = result.weekNumber,
-                weekFocus = result.weekFocus,
-                dayName = result.day.name,
-                sessions = result.sessions,
-                completedDays = enrollment.completedDays,
-                totalTrainingDays = totalTrainingDays
-            )
-            is TodaySessionResult.RestDay -> TodayUiState.RestDay(
-                enrollment = enrollment,
-                program = program,
-                weekNumber = result.weekNumber,
-                notes = result.notes,
-                completedDays = enrollment.completedDays,
-                totalTrainingDays = totalTrainingDays
-            )
-            is TodaySessionResult.ProgramComplete -> TodayUiState.ProgramComplete(
-                enrollment = enrollment,
-                program = program
-            )
-            is TodaySessionResult.NotStartedYet -> TodayUiState.NotStartedYet(
-                enrollment = enrollment,
-                program = program,
-                startDate = result.startDate
-            )
-            is TodaySessionResult.Error -> TodayUiState.Error(result.message)
+        when (val result = getTodaySessionUseCase(enrollment)) {
+            is WeekScheduleResult.ActiveWeek -> {
+                val todaySummary = result.days.first { it.dayOfWeek == result.todayDayOfWeek }
+                // Load session details for today's selected day.
+                val sessions = loadSessionsForDay(todaySummary)
+
+                _uiState.value = TodayUiState.WeekView(
+                    enrollment = enrollment,
+                    program = program,
+                    weekNumber = result.weekNumber,
+                    weekFocus = result.weekFocus,
+                    days = result.days,
+                    todayDayOfWeek = result.todayDayOfWeek,
+                    selectedDayOfWeek = result.todayDayOfWeek,
+                    selectedDaySessions = sessions,
+                    selectedDaySummary = todaySummary,
+                    completedDays = enrollment.completedDays,
+                    totalTrainingDays = totalTrainingDays
+                )
+            }
+            is WeekScheduleResult.ProgramComplete -> {
+                _uiState.value = TodayUiState.ProgramComplete(enrollment, program)
+            }
+            is WeekScheduleResult.NotStartedYet -> {
+                _uiState.value = TodayUiState.NotStartedYet(enrollment, program, result.startDate)
+            }
+            is WeekScheduleResult.Error -> {
+                _uiState.value = TodayUiState.Error(result.message)
+            }
         }
     }
 
     /**
-     * Triggers program abandonment. The UI should show a confirmation dialog before calling this.
+     * Called when the user taps a different day in the week selector.
      */
+    fun selectDay(dayOfWeek: Int) {
+        val current = _uiState.value as? TodayUiState.WeekView ?: return
+        if (dayOfWeek == current.selectedDayOfWeek) return
+
+        val daySummary = current.days.first { it.dayOfWeek == dayOfWeek }
+
+        viewModelScope.launch {
+            val sessions = loadSessionsForDay(daySummary)
+            _uiState.value = current.copy(
+                selectedDayOfWeek = dayOfWeek,
+                selectedDaySessions = sessions,
+                selectedDaySummary = daySummary
+            )
+        }
+    }
+
+    private suspend fun loadSessionsForDay(day: WeekDaySummary): List<SessionDetail> {
+        if (day.isRestDay || day.dayEntity == null) return emptyList()
+        return getTodaySessionUseCase.getSessionDetailsForDay(day.dayEntity)
+    }
+
     fun abandonProgram() {
         viewModelScope.launch {
             val result = abandonProgramUseCase()
@@ -125,63 +122,44 @@ class TodayViewModel @Inject constructor(
         }
     }
 
-    /** Clears the abandon event after the UI has consumed it. */
     fun clearAbandonEvent() {
         _abandonEvent.value = null
     }
 }
 
-/**
- * Sealed UI state for the Today screen.
- */
 sealed interface TodayUiState {
-    /** Loading enrollment and session data. */
     data object Loading : TodayUiState
-
-    /** No active program — user should be redirected to catalog. */
     data object NoActiveProgram : TodayUiState
 
     /**
-     * Today is a training day with one or more sessions.
+     * The main state: shows the current week with a selectable day bar.
      */
-    data class TrainingDay(
+    data class WeekView(
         val enrollment: EnrollmentEntity,
         val program: ProgramEntity,
         val weekNumber: Int,
         val weekFocus: String?,
-        val dayName: String,
-        val sessions: List<com.athletiq.app.domain.model.SessionDetail>,
+        val days: List<WeekDaySummary>,
+        val todayDayOfWeek: Int,
+        val selectedDayOfWeek: Int,
+        val selectedDaySessions: List<SessionDetail>,
+        val selectedDaySummary: WeekDaySummary,
         val completedDays: Int,
         val totalTrainingDays: Int
     ) : TodayUiState
 
-    /**
-     * Today is a rest day.
-     */
-    data class RestDay(
-        val enrollment: EnrollmentEntity,
-        val program: ProgramEntity,
-        val weekNumber: Int,
-        val notes: String?,
-        val completedDays: Int,
-        val totalTrainingDays: Int
-    ) : TodayUiState
-
-    /** The program has been fully completed. */
     data class ProgramComplete(
         val enrollment: EnrollmentEntity,
         val program: ProgramEntity
     ) : TodayUiState
 
-    /** The program hasn't started yet. */
     data class NotStartedYet(
         val enrollment: EnrollmentEntity,
         val program: ProgramEntity,
         val startDate: java.time.LocalDate
     ) : TodayUiState
 
-    /** An error occurred. */
     data class Error(val message: String) : TodayUiState
 }
 
-// End of TodayViewModel.kt — ViewModel for today's session resolution and program management.
+// End of TodayViewModel.kt
