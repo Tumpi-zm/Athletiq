@@ -180,17 +180,24 @@ class WorkoutViewModel @Inject constructor(
         }
 
         // Decide what's next: another set, rest timer, next exercise, or workout complete.
+        val trackable = isExerciseTrackable(currentExercise.exercise)
         if (currentSetNumber < currentExercise.exercise.sets) {
-            // More sets remaining — show rest timer, then advance to next set.
-            _uiState.value = WorkoutUiState.Resting(
-                exerciseName = currentExercise.exercise.name,
-                completedSet = currentSetNumber,
-                totalSets = currentExercise.exercise.sets,
-                restSeconds = currentExercise.exercise.restSeconds,
-                totalExercises = allExercises.size,
-                currentExerciseIndex = currentExerciseIndex
-            )
-            currentSetNumber++
+            if (trackable) {
+                // More sets remaining — show rest timer, then advance to next set.
+                _uiState.value = WorkoutUiState.Resting(
+                    exerciseName = currentExercise.exercise.name,
+                    completedSet = currentSetNumber,
+                    totalSets = currentExercise.exercise.sets,
+                    restSeconds = currentExercise.exercise.restSeconds,
+                    totalExercises = allExercises.size,
+                    currentExerciseIndex = currentExerciseIndex
+                )
+                currentSetNumber++
+            } else {
+                // Non-trackable: skip rest, just advance the set.
+                currentSetNumber++
+                emitExercisingState()
+            }
         } else {
             // All sets complete for this exercise — advance to next exercise.
             advanceToNextExercise()
@@ -229,9 +236,15 @@ class WorkoutViewModel @Inject constructor(
             return
         }
 
-        // Pre-fill weight for the new exercise and show exercising state.
+        // Pre-fill weight for trackable exercises and show exercising state.
         viewModelScope.launch {
-            prefillWeight(allExercises[currentExerciseIndex].exercise.name)
+            val next = allExercises[currentExerciseIndex]
+            if (isExerciseTrackable(next.exercise)) {
+                prefillWeight(next.exercise.name)
+            } else {
+                currentWeightInput = ""
+                currentRepsInput = ""
+            }
             emitExercisingState()
         }
     }
@@ -260,8 +273,14 @@ class WorkoutViewModel @Inject constructor(
             weightKg = currentWeightInput,
             repsCompleted = currentRepsInput,
             totalExercises = allExercises.size,
-            currentExerciseIndex = currentExerciseIndex
+            currentExerciseIndex = currentExerciseIndex,
+            isTrackable = isExerciseTrackable(currentExercise.exercise)
         )
+    }
+
+    private fun isExerciseTrackable(exercise: ExerciseEntity): Boolean {
+        val reps = exercise.reps.lowercase()
+        return !reps.contains("min") && !reps.contains("sec")
     }
 
     private suspend fun findDayById(dayId: Long): com.athletiq.app.data.local.entity.DayEntity {
@@ -306,7 +325,8 @@ sealed interface WorkoutUiState {
         val weightKg: String,
         val repsCompleted: String,
         val totalExercises: Int,
-        val currentExerciseIndex: Int
+        val currentExerciseIndex: Int,
+        val isTrackable: Boolean = true
     ) : WorkoutUiState
 
     /**

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
@@ -228,18 +229,27 @@ private fun ExercisingContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Set tracker with weight/reps input.
-        SetTrackerCard(
-            exerciseName = state.exerciseName,
-            currentSet = state.currentSet,
-            totalSets = state.totalSets,
-            targetReps = state.targetReps,
-            weightKg = state.weightKg,
-            repsCompleted = state.repsCompleted,
-            onWeightChanged = onWeightChanged,
-            onRepsChanged = onRepsChanged,
-            onCompleteSet = onCompleteSet
-        )
+        if (state.isTrackable) {
+            // Gym exercise: full set tracker with weight/reps input.
+            SetTrackerCard(
+                exerciseName = state.exerciseName,
+                currentSet = state.currentSet,
+                totalSets = state.totalSets,
+                targetReps = state.targetReps,
+                weightKg = state.weightKg,
+                repsCompleted = state.repsCompleted,
+                onWeightChanged = onWeightChanged,
+                onRepsChanged = onRepsChanged,
+                onCompleteSet = onCompleteSet
+            )
+        } else {
+            // Activity exercise (e.g. football, stretching): simplified card.
+            ActivityCard(
+                exerciseName = state.exerciseName,
+                duration = state.targetReps,
+                onComplete = onCompleteSet
+            )
+        }
     }
 }
 
@@ -321,6 +331,46 @@ private fun CompleteContent(
 
         Button(onClick = onFinish) {
             Text("Done")
+        }
+    }
+}
+
+@Composable
+private fun ActivityCard(
+    exerciseName: String,
+    duration: String,
+    onComplete: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = exerciseName,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Duration: $duration",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onComplete,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(Icons.Default.CheckCircle, contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Mark Complete")
+            }
         }
     }
 }
