@@ -110,6 +110,10 @@ class EnrollmentRepository @Inject constructor(
     suspend fun incrementCompletedDays(enrollmentId: Long) {
         enrollmentDao.incrementCompletedDays(enrollmentId)
     }
+
+    suspend fun deleteEnrollment(enrollmentId: Long) {
+        enrollmentDao.deleteEnrollment(enrollmentId)
+    }
 }
 
 // End of EnrollmentRepository.kt — Repository for enrollment lifecycle management.

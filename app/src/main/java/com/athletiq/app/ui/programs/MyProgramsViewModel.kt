@@ -59,6 +59,12 @@ class MyProgramsViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteEnrollment(enrollmentId: Long) {
+        viewModelScope.launch {
+            enrollmentRepository.deleteEnrollment(enrollmentId)
+        }
+    }
 }
 
 /**

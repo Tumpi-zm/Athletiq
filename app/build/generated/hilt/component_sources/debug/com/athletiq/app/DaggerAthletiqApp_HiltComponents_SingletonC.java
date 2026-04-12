@@ -422,35 +422,35 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_athletiq_app_ui_workout_WorkoutViewModel = "com.athletiq.app.ui.workout.WorkoutViewModel";
+      static String com_athletiq_app_ui_history_HistoryViewModel = "com.athletiq.app.ui.history.HistoryViewModel";
 
       static String com_athletiq_app_ui_settings_SettingsViewModel = "com.athletiq.app.ui.settings.SettingsViewModel";
+
+      static String com_athletiq_app_ui_today_TodayViewModel = "com.athletiq.app.ui.today.TodayViewModel";
+
+      static String com_athletiq_app_ui_workout_WorkoutViewModel = "com.athletiq.app.ui.workout.WorkoutViewModel";
 
       static String com_athletiq_app_ui_catalog_CatalogViewModel = "com.athletiq.app.ui.catalog.CatalogViewModel";
 
       static String com_athletiq_app_ui_programs_MyProgramsViewModel = "com.athletiq.app.ui.programs.MyProgramsViewModel";
 
-      static String com_athletiq_app_ui_history_HistoryViewModel = "com.athletiq.app.ui.history.HistoryViewModel";
-
-      static String com_athletiq_app_ui_today_TodayViewModel = "com.athletiq.app.ui.today.TodayViewModel";
-
       @KeepFieldType
-      WorkoutViewModel com_athletiq_app_ui_workout_WorkoutViewModel2;
+      HistoryViewModel com_athletiq_app_ui_history_HistoryViewModel2;
 
       @KeepFieldType
       SettingsViewModel com_athletiq_app_ui_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      TodayViewModel com_athletiq_app_ui_today_TodayViewModel2;
+
+      @KeepFieldType
+      WorkoutViewModel com_athletiq_app_ui_workout_WorkoutViewModel2;
 
       @KeepFieldType
       CatalogViewModel com_athletiq_app_ui_catalog_CatalogViewModel2;
 
       @KeepFieldType
       MyProgramsViewModel com_athletiq_app_ui_programs_MyProgramsViewModel2;
-
-      @KeepFieldType
-      HistoryViewModel com_athletiq_app_ui_history_HistoryViewModel2;
-
-      @KeepFieldType
-      TodayViewModel com_athletiq_app_ui_today_TodayViewModel2;
     }
   }
 
@@ -520,24 +520,18 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
     private static final class LazyClassKeyProvider {
       static String com_athletiq_app_ui_history_HistoryViewModel = "com.athletiq.app.ui.history.HistoryViewModel";
 
-      static String com_athletiq_app_ui_catalog_CatalogViewModel = "com.athletiq.app.ui.catalog.CatalogViewModel";
-
-      static String com_athletiq_app_ui_programs_MyProgramsViewModel = "com.athletiq.app.ui.programs.MyProgramsViewModel";
-
       static String com_athletiq_app_ui_today_TodayViewModel = "com.athletiq.app.ui.today.TodayViewModel";
 
       static String com_athletiq_app_ui_workout_WorkoutViewModel = "com.athletiq.app.ui.workout.WorkoutViewModel";
 
       static String com_athletiq_app_ui_settings_SettingsViewModel = "com.athletiq.app.ui.settings.SettingsViewModel";
 
+      static String com_athletiq_app_ui_catalog_CatalogViewModel = "com.athletiq.app.ui.catalog.CatalogViewModel";
+
+      static String com_athletiq_app_ui_programs_MyProgramsViewModel = "com.athletiq.app.ui.programs.MyProgramsViewModel";
+
       @KeepFieldType
       HistoryViewModel com_athletiq_app_ui_history_HistoryViewModel2;
-
-      @KeepFieldType
-      CatalogViewModel com_athletiq_app_ui_catalog_CatalogViewModel2;
-
-      @KeepFieldType
-      MyProgramsViewModel com_athletiq_app_ui_programs_MyProgramsViewModel2;
 
       @KeepFieldType
       TodayViewModel com_athletiq_app_ui_today_TodayViewModel2;
@@ -547,6 +541,12 @@ public final class DaggerAthletiqApp_HiltComponents_SingletonC {
 
       @KeepFieldType
       SettingsViewModel com_athletiq_app_ui_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      CatalogViewModel com_athletiq_app_ui_catalog_CatalogViewModel2;
+
+      @KeepFieldType
+      MyProgramsViewModel com_athletiq_app_ui_programs_MyProgramsViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {

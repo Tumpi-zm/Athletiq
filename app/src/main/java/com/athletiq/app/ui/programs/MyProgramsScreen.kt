@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ListAlt
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,10 +27,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -116,7 +123,10 @@ fun MyProgramsScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(state.enrollments, key = { it.enrollment.id }) { item ->
-                        EnrollmentCard(item)
+                        EnrollmentCard(
+                            item = item,
+                            onDelete = { viewModel.deleteEnrollment(item.enrollment.id) }
+                        )
                     }
                 }
             }
@@ -128,14 +138,41 @@ fun MyProgramsScreen(
  * Card displaying a single program enrollment with status and progress.
  */
 @Composable
-private fun EnrollmentCard(item: EnrollmentWithProgram) {
+private fun EnrollmentCard(item: EnrollmentWithProgram, onDelete: () -> Unit) {
     val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy")
     val status = EnrollmentStatus.fromString(item.enrollment.status)
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     val statusColor = when (status) {
         EnrollmentStatus.ACTIVE -> MaterialTheme.colorScheme.primary
         EnrollmentStatus.COMPLETED -> MaterialTheme.colorScheme.tertiary
         EnrollmentStatus.ABANDONED -> MaterialTheme.colorScheme.error
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Delete Program History?") },
+            text = {
+                Text(
+                    "This will permanently delete the enrollment for \"${item.program.name}\" " +
+                    "and all associated workout logs. This cannot be undone."
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    onDelete()
+                }) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 
     Card(
@@ -161,6 +198,19 @@ private fun EnrollmentCard(item: EnrollmentWithProgram) {
                     color = statusColor,
                     fontWeight = FontWeight.Bold
                 )
+                if (status != EnrollmentStatus.ACTIVE) {
+                    IconButton(
+                        onClick = { showDeleteDialog = true },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(4.dp))

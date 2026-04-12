@@ -48,6 +48,8 @@ public final class EnrollmentDao_Impl implements EnrollmentDao {
 
   private final SharedSQLiteStatement __preparedStmtOfIncrementCompletedDays;
 
+  private final SharedSQLiteStatement __preparedStmtOfDeleteEnrollment;
+
   public EnrollmentDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
     this.__insertionAdapterOfEnrollmentEntity = new EntityInsertionAdapter<EnrollmentEntity>(__db) {
@@ -124,6 +126,14 @@ public final class EnrollmentDao_Impl implements EnrollmentDao {
       @NonNull
       public String createQuery() {
         final String _query = "UPDATE enrollments SET completedDays = completedDays + 1 WHERE id = ?";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfDeleteEnrollment = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM enrollments WHERE id = ?";
         return _query;
       }
     };
@@ -219,6 +229,32 @@ public final class EnrollmentDao_Impl implements EnrollmentDao {
           }
         } finally {
           __preparedStmtOfIncrementCompletedDays.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteEnrollment(final long enrollmentId,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteEnrollment.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, enrollmentId);
+        try {
+          __db.beginTransaction();
+          try {
+            _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return Unit.INSTANCE;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteEnrollment.release(_stmt);
         }
       }
     }, $completion);

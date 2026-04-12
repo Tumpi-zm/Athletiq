@@ -116,6 +116,9 @@ interface EnrollmentDao {
      */
     @Query("UPDATE enrollments SET completedDays = completedDays + 1 WHERE id = :enrollmentId")
     suspend fun incrementCompletedDays(enrollmentId: Long)
+
+    @Query("DELETE FROM enrollments WHERE id = :enrollmentId")
+    suspend fun deleteEnrollment(enrollmentId: Long)
 }
 
 // End of EnrollmentDao.kt — DAO for enrollment lifecycle management and history queries.
