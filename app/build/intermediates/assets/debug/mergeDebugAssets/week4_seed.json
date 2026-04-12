@@ -1,0 +1,429 @@
+{
+  "week": {
+    "weekNumber": 4,
+    "focusLabel": "Foundation & Capacity — Deload",
+    "days": [
+      {
+        "dayOfWeek": 1,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 1 — Upper Strength (Deload)",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Strength / Skill",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Barbell Bench Press",
+                    "targetMuscles": ["Chest", "Triceps", "Shoulders"],
+                    "sets": 3,
+                    "reps": "6",
+                    "restSeconds": 120,
+                    "tempo": "3-1-1-0",
+                    "rpe": 6.0,
+                    "notes": "Use ~60% of Week 3 working weight — technique focus",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Barbell Bent-Over Row",
+                    "targetMuscles": ["Back", "Biceps"],
+                    "sets": 3,
+                    "reps": "6",
+                    "restSeconds": 120,
+                    "tempo": "3-1-1-0",
+                    "rpe": 6.0,
+                    "notes": "Same intent — lighter load, perfect positions",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Dumbbell Lateral Raise",
+                    "targetMuscles": ["Shoulders"],
+                    "sets": 3,
+                    "reps": "12",
+                    "restSeconds": 60,
+                    "rpe": 6.0,
+                    "notes": "Light, controlled — keep volume low",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "FOR_TIME",
+                "label": "B — WOD (Light Conditioning)",
+                "orderIndex": 1,
+                "timerSeconds": 600,
+                "exercises": [
+                  {
+                    "name": "Rowing Machine",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "2000m",
+                    "notes": "Conversational pace — 65–70% effort",
+                    "orderIndex": 0
+                  }
+                ]
+              },
+              {
+                "blockType": "CIRCUIT",
+                "label": "C — Core (Maintenance)",
+                "orderIndex": 2,
+                "rounds": 2,
+                "exercises": [
+                  {
+                    "name": "Dead Bug",
+                    "targetMuscles": ["Abs", "Core"],
+                    "sets": 2,
+                    "reps": "8 each side",
+                    "restSeconds": 30,
+                    "notes": "Slow and controlled — quality reps only",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Pallof Press",
+                    "targetMuscles": ["Abs", "Obliques"],
+                    "sets": 2,
+                    "reps": "8 each side",
+                    "restSeconds": 30,
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Extended Recovery",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Foam Roll — Upper Back, Lats & Pecs",
+                    "targetMuscles": ["Back", "Chest"],
+                    "sets": 1,
+                    "reps": "3 min",
+                    "notes": "Extra time this week — invest in tissue quality",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Banded Shoulder Dislocates",
+                    "targetMuscles": ["Shoulders"],
+                    "sets": 2,
+                    "reps": "15",
+                    "notes": "Slow, wide grip, light band",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Pec Doorway Stretch",
+                    "targetMuscles": ["Chest"],
+                    "sets": 1,
+                    "reps": "60s each side",
+                    "orderIndex": 2
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 2,
+        "isRestDay": true,
+        "restDayNotes": "Full rest — prioritise sleep and nutrition"
+      },
+      {
+        "dayOfWeek": 3,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 2 — Lower Strength (Deload)",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Strength / Skill",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Barbell Back Squat",
+                    "targetMuscles": ["Quads", "Glutes", "Hamstrings"],
+                    "sets": 3,
+                    "reps": "6",
+                    "restSeconds": 120,
+                    "tempo": "3-1-1-0",
+                    "rpe": 6.0,
+                    "notes": "~60% of Week 3 load — own every rep",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Romanian Deadlift",
+                    "targetMuscles": ["Hamstrings", "Glutes", "Lower Back"],
+                    "sets": 3,
+                    "reps": "8",
+                    "restSeconds": 90,
+                    "tempo": "3-1-1-0",
+                    "rpe": 6.0,
+                    "notes": "Lighter — focus on hamstring stretch at bottom",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Goblet Squat",
+                    "targetMuscles": ["Quads", "Glutes", "Core"],
+                    "sets": 2,
+                    "reps": "10",
+                    "restSeconds": 60,
+                    "rpe": 5.0,
+                    "notes": "Light KB, movement quality drill",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "B — WOD (Light Conditioning)",
+                "orderIndex": 1,
+                "exercises": [
+                  {
+                    "name": "Assault Bike",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "15 min easy",
+                    "notes": "Conversational pace — nasal breathing if possible",
+                    "orderIndex": 0
+                  }
+                ]
+              },
+              {
+                "blockType": "CIRCUIT",
+                "label": "C — Core (Maintenance)",
+                "orderIndex": 2,
+                "rounds": 2,
+                "exercises": [
+                  {
+                    "name": "Plank",
+                    "targetMuscles": ["Core"],
+                    "sets": 2,
+                    "reps": "30s hold",
+                    "restSeconds": 30,
+                    "notes": "Shorter hold — perfect position, no sagging",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Side Plank",
+                    "targetMuscles": ["Obliques", "Core"],
+                    "sets": 2,
+                    "reps": "20s each side",
+                    "restSeconds": 30,
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Extended Recovery",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Foam Roll — Quads, Hamstrings & Glutes",
+                    "targetMuscles": ["Quads", "Hamstrings", "Glutes"],
+                    "sets": 1,
+                    "reps": "4 min",
+                    "notes": "Spend extra time on tight spots",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Pigeon Stretch",
+                    "targetMuscles": ["Glutes", "Hip Flexors"],
+                    "sets": 1,
+                    "reps": "90s each side",
+                    "notes": "Longer holds this week for deep release",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Couch Stretch",
+                    "targetMuscles": ["Hip Flexors", "Quads"],
+                    "sets": 1,
+                    "reps": "60s each side",
+                    "orderIndex": 2
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 4,
+        "isRestDay": true,
+        "restDayNotes": "Full rest — prioritise sleep and nutrition"
+      },
+      {
+        "dayOfWeek": 5,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 3 — Full Body Movement (Deload)",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Strength / Skill",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Barbell Deadlift",
+                    "targetMuscles": ["Hamstrings", "Glutes", "Back"],
+                    "sets": 3,
+                    "reps": "5",
+                    "restSeconds": 150,
+                    "rpe": 6.0,
+                    "notes": "~60% of Week 3 load — crisp setup each rep",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Dumbbell Incline Press",
+                    "targetMuscles": ["Upper Chest", "Shoulders", "Triceps"],
+                    "sets": 3,
+                    "reps": "8",
+                    "restSeconds": 90,
+                    "rpe": 6.0,
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Lat Pulldown",
+                    "targetMuscles": ["Back", "Biceps"],
+                    "sets": 3,
+                    "reps": "10",
+                    "restSeconds": 60,
+                    "rpe": 6.0,
+                    "notes": "Full stretch, slow squeeze — feel the muscle",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "B — WOD (Light Conditioning)",
+                "orderIndex": 1,
+                "exercises": [
+                  {
+                    "name": "Ski Erg",
+                    "targetMuscles": ["Back", "Core", "Cardio"],
+                    "sets": 3,
+                    "reps": "2 min",
+                    "restSeconds": 60,
+                    "notes": "Moderate pace — 70% effort, stay relaxed",
+                    "orderIndex": 0
+                  }
+                ]
+              },
+              {
+                "blockType": "CIRCUIT",
+                "label": "C — Core (Maintenance)",
+                "orderIndex": 2,
+                "rounds": 2,
+                "exercises": [
+                  {
+                    "name": "Bird Dog",
+                    "targetMuscles": ["Core", "Lower Back"],
+                    "sets": 2,
+                    "reps": "8 each side",
+                    "restSeconds": 30,
+                    "notes": "Slow extension, hold 2s at top",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Supine Toe Taps",
+                    "targetMuscles": ["Abs"],
+                    "sets": 2,
+                    "reps": "12 each leg",
+                    "restSeconds": 30,
+                    "notes": "Low back stays pressed to floor",
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Extended Recovery",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Foam Roll — Full Body",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "5 min",
+                    "notes": "Thorough pass — prep the body for Month 2",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "World's Greatest Stretch",
+                    "targetMuscles": ["Hip Flexors", "Hamstrings", "Thoracic Spine"],
+                    "sets": 1,
+                    "reps": "5 each side",
+                    "notes": "Full breath at each position",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Child's Pose",
+                    "targetMuscles": ["Back", "Shoulders"],
+                    "sets": 1,
+                    "reps": "90s hold",
+                    "notes": "Breathe deep, let tension go",
+                    "orderIndex": 2
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 6,
+        "isRestDay": true,
+        "restDayNotes": "Full rest — prioritise sleep and nutrition"
+      },
+      {
+        "dayOfWeek": 7,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Sunday — Active Recovery / Football",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "Active Recovery",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Football / Pick-Up Game",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "60 min",
+                    "notes": "Keep it light — save intensity for Month 2",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Light Jog Cool-Down",
+                    "targetMuscles": ["Cardio"],
+                    "sets": 1,
+                    "reps": "10 min",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Full Body Stretch",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "15 min",
+                    "notes": "Extended session — extra 5 min this week",
+                    "orderIndex": 2
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

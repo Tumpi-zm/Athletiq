@@ -1,0 +1,445 @@
+{
+  "week": {
+    "weekNumber": 6,
+    "focusLabel": "Maximal Strength & Density",
+    "days": [
+      {
+        "dayOfWeek": 1,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 1 — Upper Strength + Dense Conditioning",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Strength",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Barbell Bench Press",
+                    "targetMuscles": ["Chest", "Triceps", "Shoulders"],
+                    "sets": 5,
+                    "reps": "4",
+                    "restSeconds": 180,
+                    "tempo": "2-1-X-0",
+                    "rpe": 8.5,
+                    "notes": "Heavier than Week 5 — fewer reps, more load",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Weighted Pull-Ups",
+                    "targetMuscles": ["Back", "Biceps"],
+                    "sets": 5,
+                    "reps": "4",
+                    "restSeconds": 180,
+                    "tempo": "2-1-X-0",
+                    "rpe": 8.5,
+                    "notes": "Add weight from Week 5",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Barbell Overhead Press",
+                    "targetMuscles": ["Shoulders", "Triceps"],
+                    "sets": 4,
+                    "reps": "5",
+                    "restSeconds": 150,
+                    "rpe": 8.5,
+                    "notes": "Strict — brace hard, keep glutes tight",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "FOR_TIME",
+                "label": "B — WOD (Dense Conditioning)",
+                "orderIndex": 1,
+                "timerSeconds": 720,
+                "exercises": [
+                  {
+                    "name": "Barbell Hang Power Clean",
+                    "targetMuscles": ["Hamstrings", "Glutes", "Traps"],
+                    "sets": 5,
+                    "reps": "3",
+                    "restSeconds": 20,
+                    "notes": "Moderate load — cycle fast",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Ring Dips",
+                    "targetMuscles": ["Chest", "Triceps", "Shoulders"],
+                    "sets": 5,
+                    "reps": "8",
+                    "restSeconds": 20,
+                    "notes": "Scale to bar dips or banded if needed",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Ski Erg",
+                    "targetMuscles": ["Back", "Core", "Cardio"],
+                    "sets": 5,
+                    "reps": "15 cal",
+                    "restSeconds": 20,
+                    "notes": "Aggressive pace — minimal rest between movements",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "SUPERSET",
+                "label": "C — Core",
+                "orderIndex": 2,
+                "rounds": 4,
+                "exercises": [
+                  {
+                    "name": "Hanging Leg Raises",
+                    "targetMuscles": ["Abs", "Hip Flexors"],
+                    "sets": 4,
+                    "reps": "12",
+                    "restSeconds": 15,
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Landmine Rotation",
+                    "targetMuscles": ["Obliques", "Core"],
+                    "sets": 4,
+                    "reps": "8 each side",
+                    "restSeconds": 45,
+                    "notes": "Pivot feet, drive through the hips",
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Recovery",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Lacrosse Ball — Pecs & Front Delt",
+                    "targetMuscles": ["Chest", "Shoulders"],
+                    "sets": 1,
+                    "reps": "90s each side",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Wall Slide",
+                    "targetMuscles": ["Shoulders", "Upper Back"],
+                    "sets": 2,
+                    "reps": "12",
+                    "orderIndex": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 2,
+        "isRestDay": true,
+        "restDayNotes": "Light walk 20–30 min or full rest"
+      },
+      {
+        "dayOfWeek": 3,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 2 — Lower Strength + Dense Conditioning",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Strength",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Barbell Back Squat",
+                    "targetMuscles": ["Quads", "Glutes", "Hamstrings"],
+                    "sets": 5,
+                    "reps": "4",
+                    "restSeconds": 180,
+                    "tempo": "2-1-X-0",
+                    "rpe": 8.5,
+                    "notes": "Heavier 4s — own the descent, explode up",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Barbell Good Morning",
+                    "targetMuscles": ["Hamstrings", "Glutes", "Lower Back"],
+                    "sets": 4,
+                    "reps": "6",
+                    "restSeconds": 120,
+                    "rpe": 7.5,
+                    "notes": "Moderate load, hinge deep, brace core",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Barbell Reverse Lunge",
+                    "targetMuscles": ["Quads", "Glutes"],
+                    "sets": 3,
+                    "reps": "6 each leg",
+                    "restSeconds": 90,
+                    "rpe": 8.0,
+                    "notes": "Heavier than Week 5 — fewer reps per leg",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "AMRAP",
+                "label": "B — WOD (Dense Conditioning)",
+                "orderIndex": 1,
+                "timerSeconds": 600,
+                "exercises": [
+                  {
+                    "name": "Dumbbell Thrusters",
+                    "targetMuscles": ["Shoulders", "Quads", "Glutes"],
+                    "sets": 1,
+                    "reps": "10",
+                    "notes": "Heavier DBs than Month 1",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Burpee Box Jump Overs",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "8",
+                    "notes": "Burpee facing box, jump over, turn and repeat",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Kettlebell Swings",
+                    "targetMuscles": ["Glutes", "Hamstrings", "Core"],
+                    "sets": 1,
+                    "reps": "15",
+                    "notes": "Heavy KB, American style (overhead)",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "SUPERSET",
+                "label": "C — Core",
+                "orderIndex": 2,
+                "rounds": 4,
+                "exercises": [
+                  {
+                    "name": "Dragon Flag Negatives",
+                    "targetMuscles": ["Abs", "Core"],
+                    "sets": 4,
+                    "reps": "5",
+                    "restSeconds": 15,
+                    "notes": "Slow 5s eccentric — scale by bending knees",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Side Plank with Hip Dip",
+                    "targetMuscles": ["Obliques", "Core"],
+                    "sets": 4,
+                    "reps": "10 each side",
+                    "restSeconds": 45,
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Recovery",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Foam Roll — Glutes & Hamstrings",
+                    "targetMuscles": ["Glutes", "Hamstrings"],
+                    "sets": 1,
+                    "reps": "2 min each area",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Couch Stretch",
+                    "targetMuscles": ["Hip Flexors", "Quads"],
+                    "sets": 1,
+                    "reps": "60s each side",
+                    "orderIndex": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 4,
+        "isRestDay": true,
+        "restDayNotes": "Light walk 20–30 min or full rest"
+      },
+      {
+        "dayOfWeek": 5,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 3 — Full Body Power + Dense Conditioning",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Strength",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Barbell Deadlift",
+                    "targetMuscles": ["Hamstrings", "Glutes", "Back"],
+                    "sets": 5,
+                    "reps": "4",
+                    "restSeconds": 180,
+                    "rpe": 8.5,
+                    "notes": "Build from Week 5 — controlled descent, powerful lockout",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Barbell Close-Grip Bench Press",
+                    "targetMuscles": ["Triceps", "Chest", "Shoulders"],
+                    "sets": 4,
+                    "reps": "6",
+                    "restSeconds": 120,
+                    "rpe": 8.0,
+                    "notes": "Hands just inside shoulder width",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Chest-Supported Row",
+                    "targetMuscles": ["Back", "Rear Delt"],
+                    "sets": 4,
+                    "reps": "8",
+                    "restSeconds": 90,
+                    "rpe": 8.0,
+                    "notes": "Incline bench, DBs — no momentum",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "EMOM",
+                "label": "B — WOD (Dense Conditioning)",
+                "orderIndex": 1,
+                "timerSeconds": 600,
+                "rounds": 10,
+                "exercises": [
+                  {
+                    "name": "Odd Min: Hang Power Snatch",
+                    "targetMuscles": ["Shoulders", "Hips", "Traps"],
+                    "sets": 5,
+                    "reps": "3",
+                    "notes": "Light barbell or DBs — speed over load",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Even Min: Burpees",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 5,
+                    "reps": "10",
+                    "notes": "Chest to floor, full extension at top",
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "SUPERSET",
+                "label": "C — Core",
+                "orderIndex": 2,
+                "rounds": 4,
+                "exercises": [
+                  {
+                    "name": "Toes-to-Bar",
+                    "targetMuscles": ["Abs", "Hip Flexors"],
+                    "sets": 4,
+                    "reps": "10",
+                    "restSeconds": 15,
+                    "notes": "+2 reps from Week 5",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Cable Woodchop",
+                    "targetMuscles": ["Obliques", "Core"],
+                    "sets": 4,
+                    "reps": "10 each side",
+                    "restSeconds": 45,
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Recovery",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Foam Roll — Full Body",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "5 min",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Cat-Cow Stretch",
+                    "targetMuscles": ["Spine", "Core"],
+                    "sets": 1,
+                    "reps": "10 cycles",
+                    "orderIndex": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 6,
+        "isRestDay": true,
+        "restDayNotes": "Full rest or gentle yoga/mobility"
+      },
+      {
+        "dayOfWeek": 7,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Sunday — Active Recovery / Football",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "Active Recovery",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Football / Pick-Up Game",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "60–90 min",
+                    "notes": "Moderate intensity — enjoy the game",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Light Jog Cool-Down",
+                    "targetMuscles": ["Cardio"],
+                    "sets": 1,
+                    "reps": "10 min",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Full Body Stretch",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "10 min",
+                    "notes": "Hold each stretch 30–45s",
+                    "orderIndex": 2
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

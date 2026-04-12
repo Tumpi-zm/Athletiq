@@ -1,0 +1,428 @@
+{
+  "week": {
+    "weekNumber": 9,
+    "focusLabel": "Peak Power & Speed — Power Introduction",
+    "days": [
+      {
+        "dayOfWeek": 1,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 1 — Upper Power",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Power",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Push Press",
+                    "targetMuscles": ["Shoulders", "Triceps", "Core"],
+                    "sets": 5,
+                    "reps": "3",
+                    "restSeconds": 150,
+                    "rpe": 8.0,
+                    "tempo": "X-0-1-0",
+                    "notes": "Explosive dip-drive — lock out hard overhead",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Barbell Bench Press (Speed Work)",
+                    "targetMuscles": ["Chest", "Triceps", "Shoulders"],
+                    "sets": 5,
+                    "reps": "3",
+                    "restSeconds": 120,
+                    "rpe": 7.5,
+                    "tempo": "X-1-1-0",
+                    "notes": "~70% 1RM — maximal bar speed on every rep",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Plyometric Push-Ups",
+                    "targetMuscles": ["Chest", "Triceps", "Shoulders"],
+                    "sets": 4,
+                    "reps": "5",
+                    "restSeconds": 90,
+                    "rpe": 8.0,
+                    "notes": "Hands leave ground — full extension, soft landing",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "SUPERSET",
+                "label": "B — Accessory Superset",
+                "orderIndex": 1,
+                "exercises": [
+                  {
+                    "name": "Dumbbell Hang Clean & Press",
+                    "targetMuscles": ["Shoulders", "Traps", "Full Body"],
+                    "sets": 4,
+                    "reps": "5 each arm",
+                    "restSeconds": 0,
+                    "rpe": 7.5,
+                    "notes": "Explosive hip snap into press",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Medicine Ball Chest Pass",
+                    "targetMuscles": ["Chest", "Triceps", "Core"],
+                    "sets": 4,
+                    "reps": "8",
+                    "restSeconds": 90,
+                    "rpe": 8.0,
+                    "notes": "Wall or partner — maximum velocity release",
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "FOR_TIME",
+                "label": "C — WOD: Sprint Conditioning",
+                "orderIndex": 2,
+                "timeCap": 10,
+                "exercises": [
+                  {
+                    "name": "Rowing Sprint",
+                    "targetMuscles": ["Full Body", "Cardio"],
+                    "sets": 5,
+                    "reps": "200m",
+                    "restSeconds": 60,
+                    "notes": "Max effort rows, walk-back rest",
+                    "orderIndex": 0
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Core Power",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Medicine Ball Slam",
+                    "targetMuscles": ["Core", "Shoulders", "Lats"],
+                    "sets": 3,
+                    "reps": "8",
+                    "restSeconds": 60,
+                    "rpe": 8.0,
+                    "notes": "Full hip extension then violent slam",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Hanging Knee Raise",
+                    "targetMuscles": ["Abs", "Hip Flexors"],
+                    "sets": 3,
+                    "reps": "10",
+                    "restSeconds": 45,
+                    "orderIndex": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 2,
+        "isRestDay": true,
+        "restDayNotes": "Recovery — foam roll, light walk"
+      },
+      {
+        "dayOfWeek": 3,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 2 — Lower Power",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Power",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Power Clean",
+                    "targetMuscles": ["Hamstrings", "Glutes", "Traps", "Full Body"],
+                    "sets": 5,
+                    "reps": "3",
+                    "restSeconds": 180,
+                    "rpe": 8.0,
+                    "tempo": "X-0-1-0",
+                    "notes": "From floor — aggressive second pull, catch in quarter squat",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Barbell Back Squat (Speed Work)",
+                    "targetMuscles": ["Quads", "Glutes", "Hamstrings"],
+                    "sets": 5,
+                    "reps": "3",
+                    "restSeconds": 120,
+                    "rpe": 7.5,
+                    "tempo": "X-1-2-0",
+                    "notes": "~70% 1RM — explode out of the hole",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Box Jumps",
+                    "targetMuscles": ["Quads", "Glutes", "Calves"],
+                    "sets": 4,
+                    "reps": "5",
+                    "restSeconds": 90,
+                    "rpe": 8.0,
+                    "notes": "Step down each rep — reset, full effort jump",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "SUPERSET",
+                "label": "B — Accessory Superset",
+                "orderIndex": 1,
+                "exercises": [
+                  {
+                    "name": "Dumbbell Jump Squat",
+                    "targetMuscles": ["Quads", "Glutes"],
+                    "sets": 3,
+                    "reps": "6",
+                    "restSeconds": 0,
+                    "rpe": 7.5,
+                    "notes": "Light DBs — focus on height and soft landing",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Broad Jumps",
+                    "targetMuscles": ["Glutes", "Quads", "Hamstrings"],
+                    "sets": 3,
+                    "reps": "5",
+                    "restSeconds": 90,
+                    "rpe": 8.0,
+                    "notes": "Arm swing, full hip extension, stick the landing",
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "EMOM",
+                "label": "C — WOD: EMOM Conditioning",
+                "orderIndex": 2,
+                "durationMinutes": 10,
+                "exercises": [
+                  {
+                    "name": "Kettlebell Swing",
+                    "targetMuscles": ["Glutes", "Hamstrings", "Core"],
+                    "sets": 10,
+                    "reps": "10",
+                    "notes": "Russian swing — hip snap, squeeze at top. Rest remainder of each minute.",
+                    "orderIndex": 0
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Core Power",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Rotational Medicine Ball Throw",
+                    "targetMuscles": ["Obliques", "Core", "Hips"],
+                    "sets": 3,
+                    "reps": "6 each side",
+                    "restSeconds": 60,
+                    "notes": "Lateral throw against wall — rotate from hips",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Pallof Press",
+                    "targetMuscles": ["Abs", "Obliques"],
+                    "sets": 3,
+                    "reps": "8 each side",
+                    "restSeconds": 45,
+                    "orderIndex": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 4,
+        "isRestDay": true,
+        "restDayNotes": "Recovery — foam roll, mobility"
+      },
+      {
+        "dayOfWeek": 5,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 3 — Full Body Explosive",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Olympic Lift",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Hang Power Snatch",
+                    "targetMuscles": ["Shoulders", "Traps", "Glutes", "Full Body"],
+                    "sets": 5,
+                    "reps": "3",
+                    "restSeconds": 180,
+                    "rpe": 8.0,
+                    "tempo": "X-0-1-0",
+                    "notes": "From above knee — fast elbows, punch overhead",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Barbell Deadlift (Speed Work)",
+                    "targetMuscles": ["Hamstrings", "Glutes", "Back"],
+                    "sets": 5,
+                    "reps": "3",
+                    "restSeconds": 120,
+                    "rpe": 7.5,
+                    "tempo": "X-1-1-0",
+                    "notes": "~70% 1RM — rip it off the floor",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Depth Jumps",
+                    "targetMuscles": ["Quads", "Glutes", "Calves"],
+                    "sets": 3,
+                    "reps": "5",
+                    "restSeconds": 120,
+                    "rpe": 8.5,
+                    "notes": "Step off 18\" box → immediate max vertical jump. Minimal ground contact.",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "SUPERSET",
+                "label": "B — Upper Explosion Superset",
+                "orderIndex": 1,
+                "exercises": [
+                  {
+                    "name": "Weighted Pull-Ups",
+                    "targetMuscles": ["Back", "Biceps"],
+                    "sets": 4,
+                    "reps": "3",
+                    "restSeconds": 0,
+                    "rpe": 8.0,
+                    "notes": "Explosive pull — chest to bar",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Medicine Ball Overhead Throw",
+                    "targetMuscles": ["Shoulders", "Core", "Triceps"],
+                    "sets": 4,
+                    "reps": "6",
+                    "restSeconds": 90,
+                    "rpe": 8.0,
+                    "notes": "Scoop and launch — full body extension",
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "FOR_TIME",
+                "label": "C — WOD: Sprint Chipper",
+                "orderIndex": 2,
+                "timeCap": 12,
+                "exercises": [
+                  {
+                    "name": "Assault Bike Sprint",
+                    "targetMuscles": ["Full Body", "Cardio"],
+                    "sets": 1,
+                    "reps": "15 cal",
+                    "notes": "Go — 15 cal bike, then 15 KB swings, then 15 cal bike. Repeat x3 rounds.",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Kettlebell Swing",
+                    "targetMuscles": ["Glutes", "Hamstrings", "Core"],
+                    "sets": 1,
+                    "reps": "15",
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Core Power",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Landmine Rotation",
+                    "targetMuscles": ["Obliques", "Core", "Shoulders"],
+                    "sets": 3,
+                    "reps": "8 each side",
+                    "restSeconds": 60,
+                    "notes": "Fast rotation — arms extended, control the arc",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Plank to Push-Up",
+                    "targetMuscles": ["Core", "Triceps", "Shoulders"],
+                    "sets": 3,
+                    "reps": "8",
+                    "restSeconds": 45,
+                    "notes": "Alternate leading arm each set",
+                    "orderIndex": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 6,
+        "isRestDay": true,
+        "restDayNotes": "Recovery — CNS demands are high this month"
+      },
+      {
+        "dayOfWeek": 7,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Sunday — Active Recovery / Football",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "Active Recovery",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Football / Pick-Up Game",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "60 min",
+                    "notes": "Apply your new explosiveness — enjoy it",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Light Jog Cool-Down",
+                    "targetMuscles": ["Cardio"],
+                    "sets": 1,
+                    "reps": "10 min",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Full Body Stretch",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "10 min",
+                    "orderIndex": 2
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

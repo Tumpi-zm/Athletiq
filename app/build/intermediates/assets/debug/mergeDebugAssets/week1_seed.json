@@ -1,0 +1,459 @@
+{
+  "program": {
+    "name": "90-Day Hybrid Athlete Program",
+    "description": "A 12-week progressive program combining strength training, conditioning, and sport-specific work. Month 1 builds a foundation of capacity, Month 2 develops maximal strength and training density, and Month 3 peaks power and speed for game-day performance.",
+    "durationWeeks": 12,
+    "tags": ["Hybrid", "Strength", "Conditioning", "12 Weeks", "3x/Week"]
+  },
+  "week": {
+    "weekNumber": 1,
+    "focusLabel": "Foundation & Capacity",
+    "days": [
+      {
+        "dayOfWeek": 1,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 1 — Upper Strength + Conditioning",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Strength / Skill",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Barbell Bench Press",
+                    "targetMuscles": ["Chest", "Triceps", "Shoulders"],
+                    "sets": 4,
+                    "reps": "8",
+                    "restSeconds": 120,
+                    "tempo": "3-1-1-0",
+                    "rpe": 7.0,
+                    "notes": "Control the eccentric, pause at chest",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Barbell Bent-Over Row",
+                    "targetMuscles": ["Back", "Biceps"],
+                    "sets": 4,
+                    "reps": "8",
+                    "restSeconds": 120,
+                    "tempo": "3-1-1-0",
+                    "rpe": 7.0,
+                    "notes": "Keep torso at ~45°, squeeze at top",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Dumbbell Overhead Press",
+                    "targetMuscles": ["Shoulders", "Triceps"],
+                    "sets": 3,
+                    "reps": "10",
+                    "restSeconds": 90,
+                    "rpe": 7.0,
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "FOR_TIME",
+                "label": "B — WOD (Workout of the Day)",
+                "orderIndex": 1,
+                "timerSeconds": 720,
+                "exercises": [
+                  {
+                    "name": "Dumbbell Thrusters",
+                    "targetMuscles": ["Shoulders", "Quads", "Glutes"],
+                    "sets": 3,
+                    "reps": "15",
+                    "restSeconds": 60,
+                    "notes": "Light-to-moderate weight, maintain pace",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Pull-Ups",
+                    "targetMuscles": ["Back", "Biceps"],
+                    "sets": 3,
+                    "reps": "10",
+                    "restSeconds": 60,
+                    "notes": "Use band assist if needed",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Box Jumps",
+                    "targetMuscles": ["Quads", "Glutes", "Calves"],
+                    "sets": 3,
+                    "reps": "12",
+                    "restSeconds": 60,
+                    "notes": "Step down to manage fatigue",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "CIRCUIT",
+                "label": "C — Core",
+                "orderIndex": 2,
+                "rounds": 3,
+                "exercises": [
+                  {
+                    "name": "Hanging Knee Raises",
+                    "targetMuscles": ["Abs"],
+                    "sets": 3,
+                    "reps": "12",
+                    "restSeconds": 30,
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Pallof Press",
+                    "targetMuscles": ["Abs", "Obliques"],
+                    "sets": 3,
+                    "reps": "10 each side",
+                    "restSeconds": 30,
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Recovery",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Foam Roll — Upper Back & Lats",
+                    "targetMuscles": ["Back"],
+                    "sets": 1,
+                    "reps": "2 min",
+                    "notes": "Slow passes, pause on tender spots",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Pec Doorway Stretch",
+                    "targetMuscles": ["Chest"],
+                    "sets": 1,
+                    "reps": "60s hold each side",
+                    "orderIndex": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 2,
+        "isRestDay": true,
+        "restDayNotes": "Light walk 20–30 min or full rest"
+      },
+      {
+        "dayOfWeek": 3,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 2 — Lower Strength + Conditioning",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Strength / Skill",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Barbell Back Squat",
+                    "targetMuscles": ["Quads", "Glutes", "Hamstrings"],
+                    "sets": 4,
+                    "reps": "8",
+                    "restSeconds": 150,
+                    "tempo": "3-1-1-0",
+                    "rpe": 7.0,
+                    "notes": "Full depth, brace hard at the top",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Romanian Deadlift",
+                    "targetMuscles": ["Hamstrings", "Glutes", "Lower Back"],
+                    "sets": 4,
+                    "reps": "8",
+                    "restSeconds": 120,
+                    "tempo": "3-1-1-0",
+                    "rpe": 7.0,
+                    "notes": "Hinge at hips, slight knee bend",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Walking Lunges",
+                    "targetMuscles": ["Quads", "Glutes"],
+                    "sets": 3,
+                    "reps": "12 each leg",
+                    "restSeconds": 90,
+                    "rpe": 7.0,
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "AMRAP",
+                "label": "B — WOD (Workout of the Day)",
+                "orderIndex": 1,
+                "timerSeconds": 600,
+                "exercises": [
+                  {
+                    "name": "Kettlebell Swings",
+                    "targetMuscles": ["Glutes", "Hamstrings", "Core"],
+                    "sets": 1,
+                    "reps": "15",
+                    "notes": "Russian style, hip snap",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Burpees",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "10",
+                    "notes": "Chest to floor",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Goblet Squats",
+                    "targetMuscles": ["Quads", "Glutes"],
+                    "sets": 1,
+                    "reps": "12",
+                    "notes": "Moderate KB, maintain upright torso",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "CIRCUIT",
+                "label": "C — Core",
+                "orderIndex": 2,
+                "rounds": 3,
+                "exercises": [
+                  {
+                    "name": "Dead Bug",
+                    "targetMuscles": ["Abs", "Core"],
+                    "sets": 3,
+                    "reps": "10 each side",
+                    "restSeconds": 30,
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Side Plank",
+                    "targetMuscles": ["Obliques", "Core"],
+                    "sets": 3,
+                    "reps": "30s each side",
+                    "restSeconds": 30,
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Recovery",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Foam Roll — Quads & IT Band",
+                    "targetMuscles": ["Quads"],
+                    "sets": 1,
+                    "reps": "2 min each leg",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Pigeon Stretch",
+                    "targetMuscles": ["Glutes", "Hip Flexors"],
+                    "sets": 1,
+                    "reps": "60s each side",
+                    "orderIndex": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 4,
+        "isRestDay": true,
+        "restDayNotes": "Light walk 20–30 min or full rest"
+      },
+      {
+        "dayOfWeek": 5,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Day 3 — Full Body Power + Conditioning",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "A — Strength / Skill",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Barbell Deadlift",
+                    "targetMuscles": ["Hamstrings", "Glutes", "Back"],
+                    "sets": 4,
+                    "reps": "6",
+                    "restSeconds": 180,
+                    "tempo": "2-0-1-0",
+                    "rpe": 7.5,
+                    "notes": "Reset each rep, maintain neutral spine",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Dumbbell Incline Press",
+                    "targetMuscles": ["Upper Chest", "Shoulders", "Triceps"],
+                    "sets": 3,
+                    "reps": "10",
+                    "restSeconds": 90,
+                    "rpe": 7.0,
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Lat Pulldown",
+                    "targetMuscles": ["Back", "Biceps"],
+                    "sets": 3,
+                    "reps": "10",
+                    "restSeconds": 90,
+                    "rpe": 7.0,
+                    "notes": "Full stretch at top, squeeze at bottom",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "FOR_TIME",
+                "label": "B — WOD (Workout of the Day)",
+                "orderIndex": 1,
+                "timerSeconds": 900,
+                "exercises": [
+                  {
+                    "name": "Rowing Machine",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "500m",
+                    "notes": "All-out effort",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Wall Balls",
+                    "targetMuscles": ["Quads", "Shoulders"],
+                    "sets": 3,
+                    "reps": "15",
+                    "restSeconds": 45,
+                    "notes": "20/14 lb ball, 10ft target",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Dumbbell Snatches",
+                    "targetMuscles": ["Shoulders", "Hips", "Core"],
+                    "sets": 3,
+                    "reps": "8 each arm",
+                    "restSeconds": 45,
+                    "notes": "Alternate arms each set",
+                    "orderIndex": 2
+                  }
+                ]
+              },
+              {
+                "blockType": "CIRCUIT",
+                "label": "C — Core",
+                "orderIndex": 2,
+                "rounds": 3,
+                "exercises": [
+                  {
+                    "name": "Plank",
+                    "targetMuscles": ["Core"],
+                    "sets": 3,
+                    "reps": "45s hold",
+                    "restSeconds": 30,
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Russian Twists",
+                    "targetMuscles": ["Obliques", "Abs"],
+                    "sets": 3,
+                    "reps": "20 total",
+                    "restSeconds": 30,
+                    "notes": "Light plate or medicine ball",
+                    "orderIndex": 1
+                  }
+                ]
+              },
+              {
+                "blockType": "STANDARD",
+                "label": "D — Recovery",
+                "orderIndex": 3,
+                "exercises": [
+                  {
+                    "name": "Foam Roll — Full Body",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "5 min",
+                    "notes": "Hit all major muscle groups",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Child's Pose",
+                    "targetMuscles": ["Back", "Shoulders"],
+                    "sets": 1,
+                    "reps": "60s hold",
+                    "orderIndex": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayOfWeek": 6,
+        "isRestDay": true,
+        "restDayNotes": "Full rest or gentle yoga/mobility"
+      },
+      {
+        "dayOfWeek": 7,
+        "isRestDay": false,
+        "sessions": [
+          {
+            "name": "Sunday — Active Recovery / Football",
+            "orderIndex": 0,
+            "blocks": [
+              {
+                "blockType": "STANDARD",
+                "label": "Active Recovery",
+                "orderIndex": 0,
+                "exercises": [
+                  {
+                    "name": "Football / Pick-Up Game",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "60–90 min",
+                    "notes": "Play at moderate intensity, focus on enjoyment",
+                    "orderIndex": 0
+                  },
+                  {
+                    "name": "Light Jog Cool-Down",
+                    "targetMuscles": ["Cardio"],
+                    "sets": 1,
+                    "reps": "10 min",
+                    "orderIndex": 1
+                  },
+                  {
+                    "name": "Full Body Stretch",
+                    "targetMuscles": ["Full Body"],
+                    "sets": 1,
+                    "reps": "10 min",
+                    "notes": "Hold each stretch 30–45s",
+                    "orderIndex": 2
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
