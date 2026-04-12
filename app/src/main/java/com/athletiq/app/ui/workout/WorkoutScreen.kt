@@ -101,7 +101,6 @@ fun WorkoutScreen(
                 ExercisingContent(
                     state = state,
                     onWeightChanged = viewModel::updateWeightInput,
-                    onRepsChanged = viewModel::updateRepsInput,
                     onCompleteSet = viewModel::completeSet,
                     modifier = Modifier.padding(paddingValues)
                 )
@@ -148,7 +147,6 @@ fun WorkoutScreen(
 private fun ExercisingContent(
     state: WorkoutUiState.Exercising,
     onWeightChanged: (String) -> Unit,
-    onRepsChanged: (String) -> Unit,
     onCompleteSet: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -237,9 +235,7 @@ private fun ExercisingContent(
                 totalSets = state.totalSets,
                 targetReps = state.targetReps,
                 weightKg = state.weightKg,
-                repsCompleted = state.repsCompleted,
                 onWeightChanged = onWeightChanged,
-                onRepsChanged = onRepsChanged,
                 onCompleteSet = onCompleteSet
             )
         } else {

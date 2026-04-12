@@ -1,13 +1,10 @@
 package com.athletiq.app.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -27,8 +24,8 @@ import androidx.compose.ui.unit.dp
  *
  * Displays:
  * - Current set number (e.g., "Set 2 of 4").
+ * - Prescribed reps prominently.
  * - Weight input field pre-filled with the last-used weight.
- * - Reps input field.
  * - "Complete Set" button that advances to the next set.
  *
  * @param exerciseName The name of the exercise being performed.
@@ -36,9 +33,7 @@ import androidx.compose.ui.unit.dp
  * @param totalSets The total number of sets prescribed.
  * @param targetReps The prescribed rep range as a string (e.g., "8-10").
  * @param weightKg The current weight input value as a string.
- * @param repsCompleted The current reps input value as a string.
  * @param onWeightChanged Callback when the weight input changes.
- * @param onRepsChanged Callback when the reps input changes.
  * @param onCompleteSet Callback when the "Complete Set" button is tapped.
  * @param modifier Modifier for the card container.
  */
@@ -49,9 +44,7 @@ fun SetTrackerCard(
     totalSets: Int,
     targetReps: String,
     weightKg: String,
-    repsCompleted: String,
     onWeightChanged: (String) -> Unit,
-    onRepsChanged: (String) -> Unit,
     onCompleteSet: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -75,46 +68,54 @@ fun SetTrackerCard(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Set progress indicator (e.g., "Set 2 of 4 · Target: 8-10 reps").
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Set $currentSet of $totalSets",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = "  ·  Target: $targetReps",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            // Set progress indicator.
+            Text(
+                text = "Set $currentSet of $totalSets",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.SemiBold
+            )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Weight and reps input fields side by side.
-            Row(
+            // Prescribed reps — prominent display.
+            Card(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
             ) {
-                OutlinedTextField(
-                    value = weightKg,
-                    onValueChange = onWeightChanged,
-                    label = { Text("Weight (kg)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true,
-                    modifier = Modifier.weight(1f)
-                )
-
-                OutlinedTextField(
-                    value = repsCompleted,
-                    onValueChange = onRepsChanged,
-                    label = { Text("Reps") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true,
-                    modifier = Modifier.weight(1f)
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Prescribed Reps",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Text(
+                        text = targetReps,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Weight input field only.
+            OutlinedTextField(
+                value = weightKg,
+                onValueChange = onWeightChanged,
+                label = { Text("Weight (kg)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 

@@ -65,7 +65,7 @@ class WorkoutViewModel @Inject constructor(
 
     // Current input state.
     private var currentWeightInput: String = ""
-    private var currentRepsInput: String = ""
+
 
     /**
      * Initializes the workout by loading the session detail and creating a workout log.
@@ -148,13 +148,7 @@ class WorkoutViewModel @Inject constructor(
         emitExercisingState()
     }
 
-    /**
-     * Updates the reps input for the current set.
-     */
-    fun updateRepsInput(value: String) {
-        currentRepsInput = value
-        emitExercisingState()
-    }
+
 
     /**
      * Completes the current set, logs it, and advances to rest timer or next exercise.
@@ -169,7 +163,7 @@ class WorkoutViewModel @Inject constructor(
             exerciseName = currentExercise.exercise.name,
             setNumber = currentSetNumber,
             weightKg = currentWeightInput.toFloatOrNull(),
-            repsCompleted = currentRepsInput.toIntOrNull(),
+            repsCompleted = null,
             notes = null
         )
         exerciseLogs.add(log)
@@ -243,7 +237,6 @@ class WorkoutViewModel @Inject constructor(
                 prefillWeight(next.exercise.name)
             } else {
                 currentWeightInput = ""
-                currentRepsInput = ""
             }
             emitExercisingState()
         }
@@ -255,7 +248,6 @@ class WorkoutViewModel @Inject constructor(
             // Format nicely: remove trailing .0 if it's a whole number.
             if (it % 1f == 0f) it.toInt().toString() else it.toString()
         } ?: ""
-        currentRepsInput = ""
     }
 
     private fun emitExercisingState() {
@@ -271,7 +263,7 @@ class WorkoutViewModel @Inject constructor(
             rpe = currentExercise.exercise.rpe,
             notes = currentExercise.exercise.notes,
             weightKg = currentWeightInput,
-            repsCompleted = currentRepsInput,
+
             totalExercises = allExercises.size,
             currentExerciseIndex = currentExerciseIndex,
             isTrackable = isExerciseTrackable(currentExercise.exercise)
@@ -323,7 +315,7 @@ sealed interface WorkoutUiState {
         val rpe: Int?,
         val notes: String?,
         val weightKg: String,
-        val repsCompleted: String,
+
         val totalExercises: Int,
         val currentExerciseIndex: Int,
         val isTrackable: Boolean = true
