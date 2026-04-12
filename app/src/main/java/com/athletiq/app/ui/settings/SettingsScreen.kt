@@ -16,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlin.math.roundToInt
 
 /**
  * Settings screen for user preferences.
@@ -82,38 +80,6 @@ fun SettingsScreen(
                     )
                 }
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // ── Default Rest Timer ─────────────────────────────────────────────
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Default Rest Timer",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = "${settings.defaultRestSeconds} seconds",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Slider(
-                        value = settings.defaultRestSeconds.toFloat(),
-                        onValueChange = { viewModel.updateDefaultRestSeconds(it.roundToInt()) },
-                        valueRange = 30f..300f,
-                        steps = 8
-                    )
-                }
-            }
 
             Spacer(modifier = Modifier.height(16.dp))
 

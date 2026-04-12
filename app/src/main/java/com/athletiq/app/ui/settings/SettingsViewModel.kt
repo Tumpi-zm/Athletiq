@@ -39,18 +39,6 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
     }
 
     /**
-     * Updates the default rest timer duration.
-     *
-     * @param seconds New default rest duration in seconds.
-     */
-    fun updateDefaultRestSeconds(seconds: Int) {
-        _settingsState.value = _settingsState.value.copy(
-            defaultRestSeconds = seconds
-        )
-        // TODO("Persist setting to DataStore in production")
-    }
-
-    /**
      * Toggles daily training reminder notifications.
      */
     fun toggleNotifications() {
@@ -67,9 +55,6 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
 data class SettingsState(
     /** Whether to display weights in kilograms (true) or pounds (false). */
     val useKg: Boolean = true,
-
-    /** Default rest timer duration in seconds, used when exercises don't specify their own. */
-    val defaultRestSeconds: Int = 90,
 
     /** Whether daily training reminder notifications are enabled. */
     val notificationsEnabled: Boolean = false
