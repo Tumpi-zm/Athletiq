@@ -138,6 +138,7 @@ class SeedDataProvider @Inject constructor(
                                 tempo = seedExercise.tempo,
                                 rpe = seedExercise.rpe?.toInt(),
                                 notes = seedExercise.notes,
+                                description = ExerciseDescriptions.getDescription(seedExercise.name),
                                 orderIndex = seedExercise.orderIndex
                             )
                         )

@@ -262,6 +262,7 @@ class WorkoutViewModel @Inject constructor(
             tempo = currentExercise.exercise.tempo,
             rpe = currentExercise.exercise.rpe,
             notes = currentExercise.exercise.notes,
+            description = currentExercise.exercise.description,
             weightKg = currentWeightInput,
 
             totalExercises = allExercises.size,
@@ -314,6 +315,7 @@ sealed interface WorkoutUiState {
         val tempo: String?,
         val rpe: Int?,
         val notes: String?,
+        val description: String?,
         val weightKg: String,
 
         val totalExercises: Int,

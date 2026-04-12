@@ -102,6 +102,12 @@ data class ExerciseEntity(
     val notes: String? = null,
 
     /**
+     * Detailed exercise description with form cues and technique guidance.
+     * Shown on the workout screen to help the athlete execute with proper form.
+     */
+    val description: String? = null,
+
+    /**
      * Sort order within the parent block. Determines exercise sequence during workout execution.
      */
     val orderIndex: Int
