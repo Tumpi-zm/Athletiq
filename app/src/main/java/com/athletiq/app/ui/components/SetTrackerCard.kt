@@ -1,6 +1,8 @@
 package com.athletiq.app.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,6 +46,7 @@ fun SetTrackerCard(
     totalSets: Int,
     targetReps: String,
     weightKg: String,
+    targetMuscles: String? = null,
     onWeightChanged: (String) -> Unit,
     onCompleteSet: () -> Unit,
     modifier: Modifier = Modifier
@@ -58,23 +61,30 @@ fun SetTrackerCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // Exercise name header.
-            Text(
-                text = exerciseName,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Set progress indicator.
-            Text(
-                text = "Set $currentSet of $totalSets",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.SemiBold
-            )
+            // Exercise name header with category icon.
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                ExerciseCategoryIcon(
+                    exerciseName = exerciseName,
+                    targetMuscles = targetMuscles
+                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = exerciseName,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "Set $currentSet of $totalSets",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 

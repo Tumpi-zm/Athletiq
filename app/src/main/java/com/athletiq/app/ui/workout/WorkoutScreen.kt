@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.athletiq.app.ui.components.ExerciseCategoryIcon
 import com.athletiq.app.ui.components.RestTimerBar
 import com.athletiq.app.ui.components.SetTrackerCard
 
@@ -320,6 +321,7 @@ private fun ExercisingContent(
                 totalSets = state.totalSets,
                 targetReps = state.targetReps,
                 weightKg = state.weightKg,
+                targetMuscles = state.targetMuscles,
                 onWeightChanged = onWeightChanged,
                 onCompleteSet = onCompleteSet
             )
@@ -328,6 +330,7 @@ private fun ExercisingContent(
             ActivityCard(
                 exerciseName = state.exerciseName,
                 duration = state.targetReps,
+                targetMuscles = state.targetMuscles,
                 onComplete = onCompleteSet
             )
         }
@@ -420,6 +423,7 @@ private fun CompleteContent(
 private fun ActivityCard(
     exerciseName: String,
     duration: String,
+    targetMuscles: String? = null,
     onComplete: () -> Unit
 ) {
     Card(
@@ -428,11 +432,20 @@ private fun ActivityCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = exerciseName,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                ExerciseCategoryIcon(
+                    exerciseName = exerciseName,
+                    targetMuscles = targetMuscles
+                )
+                Text(
+                    text = exerciseName,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
