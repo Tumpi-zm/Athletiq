@@ -48,9 +48,8 @@ class MainActivity : ComponentActivity() {
                 seedDataProvider.seedDatabase()
             }
 
-            // Determine start destination based on active enrollment.
-            val activeEnrollment = enrollmentRepository.getActiveEnrollmentOnce()
-            startDestination = if (activeEnrollment != null) Routes.Today else Routes.Catalog
+            // Always start on Catalog, regardless of active enrollment.
+            startDestination = Routes.Catalog
             isReady = true
         }
 
