@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -72,9 +74,41 @@ fun WorkoutScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    // Back-press confirmation dialog state.
+    var showLeaveDialog by remember { mutableStateOf(false) }
+
     // Initialize the workout on first composition.
     LaunchedEffect(sessionId) {
         viewModel.initWorkout(sessionId, enrollmentId, dayId)
+    }
+
+    // Intercept system back button.
+    androidx.activity.compose.BackHandler(
+        enabled = uiState is WorkoutUiState.Exercising || uiState is WorkoutUiState.Resting
+    ) {
+        showLeaveDialog = true
+    }
+
+    // Leave workout confirmation dialog.
+    if (showLeaveDialog) {
+        AlertDialog(
+            onDismissRequest = { showLeaveDialog = false },
+            title = { Text("Leave Workout?") },
+            text = { Text("Your progress is saved. You can resume this workout when you come back.") },
+            confirmButton = {
+                Button(onClick = {
+                    showLeaveDialog = false
+                    onNavigateBack()
+                }) {
+                    Text("Leave")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = { showLeaveDialog = false }) {
+                    Text("Stay")
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -82,7 +116,7 @@ fun WorkoutScreen(
             TopAppBar(
                 title = { Text("Workout", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = { showLeaveDialog = true }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },

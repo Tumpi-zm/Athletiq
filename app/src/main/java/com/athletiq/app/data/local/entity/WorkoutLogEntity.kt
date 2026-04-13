@@ -65,7 +65,25 @@ data class WorkoutLogEntity(
      * Total session duration in minutes, tracked from "Start Workout" to completion.
      * Null if the user didn't complete the session through the guided flow.
      */
-    val durationMinutes: Int? = null
+    val durationMinutes: Int? = null,
+
+    /**
+     * Index of the current exercise in the flattened exercise list.
+     * Used to resume an interrupted workout.
+     */
+    val currentExerciseIndex: Int = 0,
+
+    /**
+     * Current set number (1-indexed) within the current exercise.
+     * Used to resume an interrupted workout.
+     */
+    val currentSetNumber: Int = 1,
+
+    /**
+     * Epoch milliseconds when the workout was started.
+     * Used to calculate duration when resuming.
+     */
+    val startTimeMillis: Long = 0L
 )
 
 // End of WorkoutLogEntity.kt — Room entity for completed workout session headers.

@@ -37,12 +37,14 @@ class WorkoutLogRepository @Inject constructor(
     suspend fun startWorkoutLog(
         enrollmentId: Long,
         sessionId: Long,
-        date: LocalDate
+        date: LocalDate,
+        startTimeMillis: Long = System.currentTimeMillis()
     ): Long {
         val log = WorkoutLogEntity(
             enrollmentId = enrollmentId,
             sessionId = sessionId,
-            date = date
+            date = date,
+            startTimeMillis = startTimeMillis
         )
         return workoutLogDao.insertWorkoutLog(log)
     }
@@ -73,6 +75,21 @@ class WorkoutLogRepository @Inject constructor(
      */
     suspend fun finishWorkout(workoutLogId: Long, durationMinutes: Int) {
         workoutLogDao.updateWorkoutDuration(workoutLogId, durationMinutes)
+    }
+
+    /**
+     * Updates the in-progress exercise/set position for a workout.
+     */
+    suspend fun updateWorkoutProgress(workoutLogId: Long, exerciseIndex: Int, setNumber: Int) {
+        workoutLogDao.updateWorkoutProgress(workoutLogId, exerciseIndex, setNumber)
+    }
+
+    /**
+     * Finds an active (unfinished) workout for a session on a given date.
+     * Returns null if no in-progress workout exists.
+     */
+    suspend fun getActiveWorkoutLog(sessionId: Long, date: LocalDate): WorkoutLogEntity? {
+        return workoutLogDao.getActiveWorkoutLog(sessionId, date)
     }
 
     // ── History Queries ────────────────────────────────────────────────────────

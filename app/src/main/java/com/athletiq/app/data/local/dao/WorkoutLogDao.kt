@@ -102,6 +102,23 @@ interface WorkoutLogDao {
     @Query("UPDATE workout_logs SET durationMinutes = :durationMinutes WHERE id = :workoutLogId")
     suspend fun updateWorkoutDuration(workoutLogId: Long, durationMinutes: Int)
 
+    /**
+     * Updates the workout progress position (exercise index and set number).
+     */
+    @Query("UPDATE workout_logs SET currentExerciseIndex = :exerciseIndex, currentSetNumber = :setNumber WHERE id = :workoutLogId")
+    suspend fun updateWorkoutProgress(workoutLogId: Long, exerciseIndex: Int, setNumber: Int)
+
+    /**
+     * Finds an in-progress (unfinished) workout log for a session on today's date.
+     * A workout is in-progress if durationMinutes is null (not yet completed).
+     */
+    @Query("""
+        SELECT * FROM workout_logs 
+        WHERE sessionId = :sessionId AND date = :date AND durationMinutes IS NULL
+        LIMIT 1
+    """)
+    suspend fun getActiveWorkoutLog(sessionId: Long, date: LocalDate): WorkoutLogEntity?
+
     // ── Exercise History Queries ───────────────────────────────────────────────
 
     /**

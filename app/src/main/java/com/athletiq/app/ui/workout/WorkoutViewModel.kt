@@ -79,12 +79,6 @@ class WorkoutViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                // Load the day entity first.
-                val days = programRepository.getDaysByWeek(0) // We need the day by ID.
-                // Actually, we should get the day from the dayId directly.
-                // The ProgramDao doesn't have a getDay(dayId) method, so we build the session
-                // detail differently — using getSessionsByDay and matching the session ID.
-
                 // Build session detail: load the session, its blocks, and exercises.
                 val sessions = loadSessionsForDay(dayId)
                 val session = sessions.firstOrNull { it.id == sessionId }
@@ -102,14 +96,6 @@ class WorkoutViewModel @Inject constructor(
 
                 sessionDetail = blocks
 
-                // Create the workout log in the database.
-                workoutLogId = workoutLogRepository.startWorkoutLog(
-                    enrollmentId = enrollmentId,
-                    sessionId = sessionId,
-                    date = LocalDate.now()
-                )
-                startTimeMillis = System.currentTimeMillis()
-
                 // Flatten all exercises from all blocks into a sequential list.
                 allExercises = blocks.blocks.flatMap { blockWithExercises ->
                     blockWithExercises.exercises.map { exercise ->
@@ -126,10 +112,31 @@ class WorkoutViewModel @Inject constructor(
                     return@launch
                 }
 
-                // Pre-fill weight for the first exercise.
-                currentExerciseIndex = 0
-                currentSetNumber = 1
-                prefillWeight(allExercises[0].exercise.name)
+                // Check for an active (unfinished) workout to resume.
+                val activeLog = workoutLogRepository.getActiveWorkoutLog(sessionId, LocalDate.now())
+
+                if (activeLog != null) {
+                    // Resume the existing workout.
+                    workoutLogId = activeLog.id
+                    startTimeMillis = activeLog.startTimeMillis
+                    currentExerciseIndex = activeLog.currentExerciseIndex
+                        .coerceIn(0, allExercises.size - 1)
+                    currentSetNumber = activeLog.currentSetNumber.coerceAtLeast(1)
+                } else {
+                    // Create a new workout log.
+                    startTimeMillis = System.currentTimeMillis()
+                    workoutLogId = workoutLogRepository.startWorkoutLog(
+                        enrollmentId = enrollmentId,
+                        sessionId = sessionId,
+                        date = LocalDate.now(),
+                        startTimeMillis = startTimeMillis
+                    )
+                    currentExerciseIndex = 0
+                    currentSetNumber = 1
+                }
+
+                // Pre-fill weight for the current exercise.
+                prefillWeight(allExercises[currentExerciseIndex].exercise.name)
                 emitExercisingState()
 
             } catch (e: Exception) {
@@ -187,9 +194,11 @@ class WorkoutViewModel @Inject constructor(
                     currentExerciseIndex = currentExerciseIndex
                 )
                 currentSetNumber++
+                saveProgress()
             } else {
                 // Non-trackable: skip rest, just advance the set.
                 currentSetNumber++
+                saveProgress()
                 emitExercisingState()
             }
         } else {
@@ -230,6 +239,8 @@ class WorkoutViewModel @Inject constructor(
             return
         }
 
+        saveProgress()
+
         // Pre-fill weight for trackable exercises and show exercising state.
         viewModelScope.launch {
             val next = allExercises[currentExerciseIndex]
@@ -248,6 +259,14 @@ class WorkoutViewModel @Inject constructor(
             // Format nicely: remove trailing .0 if it's a whole number.
             if (it % 1f == 0f) it.toInt().toString() else it.toString()
         } ?: ""
+    }
+
+    private fun saveProgress() {
+        viewModelScope.launch {
+            workoutLogRepository.updateWorkoutProgress(
+                workoutLogId, currentExerciseIndex, currentSetNumber
+            )
+        }
     }
 
     private fun emitExercisingState() {
