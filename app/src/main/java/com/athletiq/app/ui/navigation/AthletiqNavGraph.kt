@@ -89,6 +89,10 @@ fun AthletiqNavGraph(
                 },
                 onNavigateToSettings = {
                     navController.navigate(Routes.Settings)
+                },
+                onNavigateToCatalog = {
+                    navController.popBackStack(Routes.Catalog, inclusive = true)
+                    navController.navigate(Routes.Catalog)
                 }
             )
         }

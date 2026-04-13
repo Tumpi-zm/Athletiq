@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -35,6 +36,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -65,17 +70,48 @@ fun CatalogScreen(
     viewModel: CatalogViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val startEvent by viewModel.startProgramEvent.collectAsStateWithLifecycle()
+    var showActiveDialog by remember { mutableStateOf(false) }
 
     // Handle start program result.
+
     LaunchedEffect(startEvent) {
         when (startEvent) {
             is StartProgramResult.Success -> {
                 viewModel.clearStartProgramEvent()
                 onProgramStarted()
             }
-            else -> { /* ActiveProgramExists or null — handled inline */ }
+            is StartProgramResult.ActiveProgramExists -> {
+                showActiveDialog = true
+            }
+            else -> {}
         }
+    }
+
+    if (showActiveDialog) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { showActiveDialog = false; viewModel.clearStartProgramEvent() },
+            title = { Text("Active Program Exists") },
+            text = { Text("You already have an active program. Would you like to go to Today's session?") },
+            confirmButton = {
+                androidx.compose.material3.TextButton(onClick = {
+                    showActiveDialog = false
+                    viewModel.clearStartProgramEvent()
+                    onProgramStarted()
+                }) {
+                    Text("Go to Today")
+                }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(onClick = {
+                    showActiveDialog = false
+                    viewModel.clearStartProgramEvent()
+                }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 
     Scaffold(
