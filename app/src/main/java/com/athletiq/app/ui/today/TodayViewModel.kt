@@ -100,6 +100,7 @@ class TodayViewModel @Inject constructor(
                 val todaySummary = result.days.first { it.dayOfWeek == result.todayDayOfWeek }
                 // Load session details for today's selected day.
                 val sessions = loadSessionsForDay(todaySummary)
+                val allDaySessionIds = loadAllDaySessionIds(result.days)
 
                 _uiState.value = TodayUiState.WeekView(
                     enrollment = enrollment,
@@ -114,7 +115,8 @@ class TodayViewModel @Inject constructor(
                     completedDays = enrollment.completedDays,
                     totalTrainingDays = totalTrainingDays,
                     currentWeekNumber = result.weekNumber,
-                    totalWeeks = program.durationWeeks
+                    totalWeeks = program.durationWeeks,
+                    allDaySessionIds = allDaySessionIds
                 )
                 // Completion indicators will be applied on the next finishedWorkoutJob emission.
             }
@@ -151,6 +153,22 @@ class TodayViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Returns a map of dayOfWeek (1=Mon..7=Sun) → list of sessionIds scheduled for that day.
+     * Used by [updateCompletedIndicators] to determine which calendar day a finished session
+     * belongs to, regardless of the actual date it was performed.
+     */
+    private suspend fun loadAllDaySessionIds(days: List<WeekDaySummary>): Map<Int, List<Long>> {
+        val result = mutableMapOf<Int, List<Long>>()
+        for (day in days) {
+            if (!day.isRestDay && day.dayEntity != null) {
+                val sessions = programRepository.getSessionsByDay(day.dayEntity.id)
+                result[day.dayOfWeek] = sessions.map { it.id }
+            }
+        }
+        return result
+    }
+
     private suspend fun loadSessionsForDay(day: WeekDaySummary): List<SessionDetail> {
         if (day.isRestDay || day.dayEntity == null) return emptyList()
         return getTodaySessionUseCase.getSessionDetailsForDay(day.dayEntity)
@@ -183,13 +201,15 @@ class TodayViewModel @Inject constructor(
             if (result is WeekScheduleResult.ActiveWeek) {
                 val mondaySummary = result.days.first { it.dayOfWeek == 1 }
                 val sessions = loadSessionsForDay(mondaySummary)
+                val allDaySessionIds = loadAllDaySessionIds(result.days)
                 val newState = current.copy(
                     weekNumber = result.weekNumber,
                     weekFocus = result.weekFocus,
                     days = result.days,
                     selectedDayOfWeek = 1,
                     selectedDaySessions = sessions,
-                    selectedDaySummary = mondaySummary
+                    selectedDaySummary = mondaySummary,
+                    allDaySessionIds = allDaySessionIds
                 )
                 _uiState.value = updateCompletedIndicators(_finishedKeys.value, newState)
             } else if (result is WeekScheduleResult.Error) {
@@ -202,14 +222,17 @@ class TodayViewModel @Inject constructor(
      * Recomputes which sessions and days in the displayed week are completed, given the
      * current [finishedKeys] snapshot and the current [state].
      *
-     * **Completion definition:** a (sessionId, date) pair exists in [finishedKeys].
+     * **Completion definition:** a finished [WorkoutKey] whose [WorkoutKey.date] falls anywhere
+     * within the calendar-week window `[weekMonday, weekSunday]` of the displayed week counts
+     * as a completion for the session identified by [WorkoutKey.sessionId]. This means a workout
+     * done off its scheduled day (e.g. Monday's session completed on Sunday) is still shown
+     * as completed.
      *
-     * **Date mapping:** for a program day-of-week [D] in program week [W]:
-     * ```
-     * dayDate = today + (D - todayDayOfWeek) days + ((W - currentWeekNumber) * 7) days
-     * ```
+     * **Day-chip indicator:** resolved via [TodayUiState.WeekView.allDaySessionIds], which maps
+     * each dayOfWeek to the sessionIds scheduled for that day, so the chip highlights the
+     * *scheduled* day rather than the calendar day the workout was performed on.
      *
-     * @param finishedKeys All finished (sessionId, date) pairs for the enrollment.
+     * @param finishedKeys All finished [WorkoutKey] pairs for the enrollment.
      * @param state The current [TodayUiState.WeekView] to update.
      * @return A new [TodayUiState.WeekView] with updated completion sets.
      */
@@ -220,30 +243,28 @@ class TodayViewModel @Inject constructor(
         val today = LocalDate.now()
         val todayDayOfWeek = today.dayOfWeek.value
 
-        // O(1) lookup set of (sessionId, date) pairs that are finished.
-        val finishedSet: Set<Pair<Long, LocalDate>> = finishedKeys
-            .map { it.sessionId to it.date }
+        // Compute the Monday of the displayed week, then derive Sunday.
+        val weekMonday = today
+            .minusDays((todayDayOfWeek - 1).toLong())
+            .plusDays(((state.weekNumber - state.currentWeekNumber) * 7).toLong())
+        val weekSunday = weekMonday.plusDays(6)
+
+        // Collect sessionIds finished on ANY date within the displayed week's window.
+        val finishedInWeek: Set<Long> = finishedKeys
+            .filter { !it.date.isBefore(weekMonday) && !it.date.isAfter(weekSunday) }
+            .map { it.sessionId }
             .toSet()
 
-        // Compute which sessions in the selected day are completed on their mapped date.
+        // Sessions in the selected day that were completed this week (regardless of which date).
         val completedSessionIds: Set<Long> = state.selectedDaySessions
-            .filter { sessionDetail ->
-                val dayDate = today
-                    .plusDays((state.selectedDayOfWeek - todayDayOfWeek).toLong())
-                    .plusDays(((state.weekNumber - state.currentWeekNumber) * 7).toLong())
-                finishedSet.contains(sessionDetail.session.id to dayDate)
-            }
+            .filter { it.session.id in finishedInWeek }
             .map { it.session.id }
             .toSet()
 
-        // Compute which days of the displayed week have ≥1 finished session.
-        val completedDaysOfWeek: Set<Int> = (1..7)
-            .filter { dow ->
-                val dayDate = today
-                    .plusDays((dow - todayDayOfWeek).toLong())
-                    .plusDays(((state.weekNumber - state.currentWeekNumber) * 7).toLong())
-                finishedSet.any { it.second == dayDate }
-            }
+        // Day chips: highlight the scheduled day whose sessionIds appear in finishedInWeek.
+        val completedDaysOfWeek: Set<Int> = state.allDaySessionIds
+            .filter { (_, sessionIds) -> sessionIds.any { it in finishedInWeek } }
+            .keys
             .toSet()
 
         return state.copy(
@@ -277,7 +298,13 @@ sealed interface TodayUiState {
         /** IDs of sessions in the currently selected day that were fully finished on their date. */
         val completedSessionIds: Set<Long> = emptySet(),
         /** dayOfWeek values (1=Mon..7=Sun) in the displayed week that have ≥1 finished session. */
-        val completedDaysOfWeek: Set<Int> = emptySet()
+        val completedDaysOfWeek: Set<Int> = emptySet(),
+        /**
+         * Map of dayOfWeek (1=Mon..7=Sun) → list of sessionIds scheduled for that day this week.
+         * Used by completion indicators to highlight the *scheduled* day regardless of which
+         * calendar date the workout was actually performed on.
+         */
+        val allDaySessionIds: Map<Int, List<Long>> = emptyMap()
     ) : TodayUiState {
         /** True when the user is viewing the week that contains today. */
         val isCurrentWeek: Boolean get() = weekNumber == currentWeekNumber
