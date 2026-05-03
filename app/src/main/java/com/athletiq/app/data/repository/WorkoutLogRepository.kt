@@ -173,6 +173,13 @@ class WorkoutLogRepository @Inject constructor(
         workoutLogDao.getFinishedWorkoutKeys(enrollmentId)
 
     /**
+     * Reactive flow of in-progress (started but not finished) workout logs for an enrollment on a given date.
+     * Used by the Today screen to display "Continue Workout" on sessions that were started but not completed.
+     */
+    fun getInProgressWorkoutLogsForDate(enrollmentId: Long, date: LocalDate): Flow<List<WorkoutLogEntity>> =
+        workoutLogDao.getInProgressWorkoutLogsForDate(enrollmentId, date)
+
+    /**
      * Returns dates with completed workouts for calendar display.
      *
      * @param enrollmentId The enrollment to query.

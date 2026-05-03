@@ -341,6 +341,7 @@ private fun WeekViewContent(
                     sessionDetail = sessionDetail,
                     showStartButton = state.isCurrentWeek,
                     isCompleted = sessionDetail.session.id in state.completedSessionIds,
+                    isInProgress = sessionDetail.session.id in state.inProgressSessionIds,
                     onStartWorkout = { onStartWorkout(sessionDetail) }
                 )
             }
@@ -435,6 +436,7 @@ private fun SessionPreviewCard(
     sessionDetail: SessionDetail,
     showStartButton: Boolean,
     isCompleted: Boolean,
+    isInProgress: Boolean,
     onStartWorkout: () -> Unit
 ) {
     Card(
@@ -503,14 +505,19 @@ private fun SessionPreviewCard(
                     Icon(imageVector = Icons.Default.CheckCircle, contentDescription = null)
                     Text(text = "  Completed", style = MaterialTheme.typography.labelLarge)
                 }
-            } else if (showStartButton) {
+            } else if (showStartButton || isInProgress) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = onStartWorkout,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
-                    Text(text = "  Start Workout", style = MaterialTheme.typography.labelLarge)
+                    if (isInProgress) {
+                        Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
+                        Text(text = "  Continue Workout", style = MaterialTheme.typography.labelLarge)
+                    } else {
+                        Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
+                        Text(text = "  Start Workout", style = MaterialTheme.typography.labelLarge)
+                    }
                 }
             }
         }
@@ -561,4 +568,4 @@ private fun RestDayCard(notes: String?) {
     }
 }
 
-// End of TodayScreen.kt — Displays the user's current training day with week navigation, day selector, completed-workout indicators, and primary workout actions.
+// End of TodayScreen.kt — Displays the user's current training day with week navigation, day selector, completed-workout indicators, in-progress "Continue Workout" detection, and primary workout actions.

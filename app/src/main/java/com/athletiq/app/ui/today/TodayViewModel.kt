@@ -50,6 +50,9 @@ class TodayViewModel @Inject constructor(
     /** Coroutine job that collects [WorkoutLogRepository.getFinishedWorkoutKeys]. */
     private var finishedWorkoutJob: Job? = null
 
+    /** Coroutine job that collects in-progress workout logs for the active enrollment. */
+    private var inProgressWorkoutJob: Job? = null
+
     init {
         observeActiveEnrollment()
     }
@@ -60,12 +63,14 @@ class TodayViewModel @Inject constructor(
                 .collect { enrollment ->
                     if (enrollment == null) {
                         finishedWorkoutJob?.cancel()
+                        inProgressWorkoutJob?.cancel()
                         _finishedKeys.value = emptyList()
                         _uiState.value = TodayUiState.NoActiveProgram
                         return@collect
                     }
                     resolveWeekSchedule(enrollment)
                     startObservingFinishedWorkouts(enrollment.id)
+                    startObservingInProgressWorkouts(enrollment.id)
                 }
         }
     }
@@ -82,6 +87,23 @@ class TodayViewModel @Inject constructor(
                     _finishedKeys.value = keys
                     val current = _uiState.value as? TodayUiState.WeekView ?: return@collect
                     _uiState.value = updateCompletedIndicators(keys, current)
+                }
+        }
+    }
+
+    /**
+     * Starts (or restarts) a coroutine that watches in-progress workout logs for [enrollmentId].
+     * Every emission updates [TodayUiState.WeekView.inProgressSessionIds] for the Today screen
+     * to show "Continue Workout" instead of "Start Workout".
+     */
+    private fun startObservingInProgressWorkouts(enrollmentId: Long) {
+        inProgressWorkoutJob?.cancel()
+        inProgressWorkoutJob = viewModelScope.launch {
+            workoutLogRepository.getInProgressWorkoutLogsForDate(enrollmentId, LocalDate.now())
+                .collect { inProgressLogs ->
+                    val current = _uiState.value as? TodayUiState.WeekView ?: return@collect
+                    val inProgressSessionIds = inProgressLogs.map { it.sessionId }.toSet()
+                    _uiState.value = current.copy(inProgressSessionIds = inProgressSessionIds)
                 }
         }
     }
@@ -150,6 +172,7 @@ class TodayViewModel @Inject constructor(
                 selectedDaySummary = daySummary
             )
             _uiState.value = updateCompletedIndicators(_finishedKeys.value, newState)
+                .copy(inProgressSessionIds = current.inProgressSessionIds)
         }
     }
 
@@ -212,6 +235,7 @@ class TodayViewModel @Inject constructor(
                     allDaySessionIds = allDaySessionIds
                 )
                 _uiState.value = updateCompletedIndicators(_finishedKeys.value, newState)
+                    .copy(inProgressSessionIds = current.inProgressSessionIds)
             } else if (result is WeekScheduleResult.Error) {
                 _uiState.value = TodayUiState.Error(result.message)
             }
@@ -299,6 +323,8 @@ sealed interface TodayUiState {
         val completedSessionIds: Set<Long> = emptySet(),
         /** dayOfWeek values (1=Mon..7=Sun) in the displayed week that have ≥1 finished session. */
         val completedDaysOfWeek: Set<Int> = emptySet(),
+        /** Session IDs that have been started today but not yet completed. Shows "Continue Workout". */
+        val inProgressSessionIds: Set<Long> = emptySet(),
         /**
          * Map of dayOfWeek (1=Mon..7=Sun) → list of sessionIds scheduled for that day this week.
          * Used by completion indicators to highlight the *scheduled* day regardless of which
@@ -324,4 +350,4 @@ sealed interface TodayUiState {
     data class Error(val message: String) : TodayUiState
 }
 
-// End of TodayViewModel.kt — Week-aware ViewModel with day selection, week navigation, and reactive completed-workout indicators for the Today screen.
+// End of TodayViewModel.kt — Week-aware ViewModel with day selection, week navigation, reactive completed-workout indicators, and in-progress workout detection for the Today screen.

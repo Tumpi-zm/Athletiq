@@ -158,6 +158,17 @@ interface WorkoutLogDao {
     """)
     fun getFinishedWorkoutKeys(enrollmentId: Long): Flow<List<WorkoutKey>>
 
+    /**
+     * Returns all in-progress (started but not finished) workout logs for an enrollment on a given date.
+     * A workout is in-progress when durationMinutes IS NULL.
+     * Used by the Today screen to show "Continue Workout" instead of "Start Workout".
+     */
+    @Query("""
+        SELECT * FROM workout_logs
+        WHERE enrollmentId = :enrollmentId AND date = :date AND durationMinutes IS NULL
+    """)
+    fun getInProgressWorkoutLogsForDate(enrollmentId: Long, date: LocalDate): Flow<List<WorkoutLogEntity>>
+
     // ── Exercise History Queries ───────────────────────────────────────────────
 
     /**
