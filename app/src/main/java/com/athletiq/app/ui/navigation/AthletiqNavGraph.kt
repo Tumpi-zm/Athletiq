@@ -52,6 +52,11 @@ fun AthletiqNavGraph(
                         popUpTo(Routes.Catalog) { inclusive = true }
                     }
                 },
+                onContinueToActiveProgram = {
+                    navController.navigate(Routes.Today) {
+                        popUpTo(Routes.Catalog) { inclusive = true }
+                    }
+                },
                 onNavigateToMyPrograms = {
                     navController.navigate(Routes.MyPrograms)
                 },

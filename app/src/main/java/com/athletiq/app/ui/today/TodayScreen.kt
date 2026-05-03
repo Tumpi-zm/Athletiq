@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.History
@@ -33,6 +34,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,6 +46,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -180,7 +183,9 @@ fun TodayScreen(
                             state.enrollment.id,
                             dayEntity.id
                         )
-                    }
+                    },
+                    onPreviousWeek = { viewModel.navigateWeek(-1) },
+                    onNextWeek = { viewModel.navigateWeek(+1) }
                 )
             }
 
@@ -234,7 +239,9 @@ private fun WeekViewContent(
     state: TodayUiState.WeekView,
     paddingValues: PaddingValues,
     onDaySelected: (Int) -> Unit,
-    onStartWorkout: (SessionDetail) -> Unit
+    onStartWorkout: (SessionDetail) -> Unit,
+    onPreviousWeek: () -> Unit,
+    onNextWeek: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -246,11 +253,54 @@ private fun WeekViewContent(
         // Week header + progress.
         item {
             Column {
-                Text(
-                    text = "Week ${state.weekNumber}${state.weekFocus?.let { " — $it" } ?: ""}",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(
+                        onClick = onPreviousWeek,
+                        enabled = state.weekNumber > 1
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Previous week"
+                        )
+                    }
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "Week ${state.weekNumber} of ${state.totalWeeks}",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (state.weekFocus != null) {
+                            Text(
+                                text = state.weekFocus,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        if (!state.isCurrentWeek) {
+                            Text(
+                                text = "Browsing — not your current week",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.tertiary
+                            )
+                        }
+                    }
+
+                    IconButton(
+                        onClick = onNextWeek,
+                        enabled = state.weekNumber < state.totalWeeks
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = "Next week"
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 ProgramProgressBar(
                     completedDays = state.completedDays,
@@ -265,6 +315,8 @@ private fun WeekViewContent(
                 days = state.days,
                 todayDayOfWeek = state.todayDayOfWeek,
                 selectedDayOfWeek = state.selectedDayOfWeek,
+                isCurrentWeek = state.isCurrentWeek,
+                completedDaysOfWeek = state.completedDaysOfWeek,
                 onDaySelected = onDaySelected
             )
         }
@@ -287,6 +339,8 @@ private fun WeekViewContent(
             items(state.selectedDaySessions) { sessionDetail ->
                 SessionPreviewCard(
                     sessionDetail = sessionDetail,
+                    showStartButton = state.isCurrentWeek,
+                    isCompleted = sessionDetail.session.id in state.completedSessionIds,
                     onStartWorkout = { onStartWorkout(sessionDetail) }
                 )
             }
@@ -301,6 +355,8 @@ private fun DaySelectorRow(
     days: List<WeekDaySummary>,
     todayDayOfWeek: Int,
     selectedDayOfWeek: Int,
+    isCurrentWeek: Boolean,
+    completedDaysOfWeek: Set<Int>,
     onDaySelected: (Int) -> Unit
 ) {
     Row(
@@ -309,8 +365,9 @@ private fun DaySelectorRow(
     ) {
         days.forEach { day ->
             val isSelected = day.dayOfWeek == selectedDayOfWeek
-            val isToday = day.dayOfWeek == todayDayOfWeek
+            val isToday = isCurrentWeek && day.dayOfWeek == todayDayOfWeek
             val isTraining = !day.isRestDay
+            val isDayCompleted = isTraining && day.dayOfWeek in completedDaysOfWeek
 
             val containerColor = when {
                 isSelected -> MaterialTheme.colorScheme.primary
@@ -350,11 +407,20 @@ private fun DaySelectorRow(
                         textAlign = TextAlign.Center
                     )
                     if (isTraining) {
-                        Icon(
-                            imageVector = Icons.Default.FitnessCenter,
-                            contentDescription = null,
-                            modifier = Modifier.size(14.dp)
-                        )
+                        if (isDayCompleted && !isSelected) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp),
+                                tint = MaterialTheme.colorScheme.tertiary
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.FitnessCenter,
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -367,6 +433,8 @@ private fun DaySelectorRow(
 @Composable
 private fun SessionPreviewCard(
     sessionDetail: SessionDetail,
+    showStartButton: Boolean,
+    isCompleted: Boolean,
     onStartWorkout: () -> Unit
 ) {
     Card(
@@ -375,6 +443,26 @@ private fun SessionPreviewCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+
+            // Completed banner — shown at the top of the card when the session is finished.
+            if (isCompleted) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Completed",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+
             Text(
                 text = sessionDetail.session.name,
                 style = MaterialTheme.typography.titleMedium,
@@ -404,12 +492,26 @@ private fun SessionPreviewCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(
-                onClick = onStartWorkout,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
-                Text(text = "  Start Workout", style = MaterialTheme.typography.labelLarge)
+            if (isCompleted) {
+                // Disabled "Completed" button — the workout is done for this day.
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(
+                    onClick = {},
+                    enabled = false,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(imageVector = Icons.Default.CheckCircle, contentDescription = null)
+                    Text(text = "  Completed", style = MaterialTheme.typography.labelLarge)
+                }
+            } else if (showStartButton) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = onStartWorkout,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
+                    Text(text = "  Start Workout", style = MaterialTheme.typography.labelLarge)
+                }
             }
         }
     }
@@ -459,4 +561,4 @@ private fun RestDayCard(notes: String?) {
     }
 }
 
-// End of TodayScreen.kt
+// End of TodayScreen.kt — Displays the user's current training day with week navigation, day selector, completed-workout indicators, and primary workout actions.

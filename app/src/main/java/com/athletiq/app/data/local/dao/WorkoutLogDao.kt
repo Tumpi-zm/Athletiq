@@ -10,6 +10,14 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 /**
+ * Lightweight projection of a finished workout used by the Today screen's completion indicators.
+ *
+ * @param sessionId The session template ID that was completed.
+ * @param date The calendar date on which the session was finished.
+ */
+data class WorkoutKey(val sessionId: Long, val date: LocalDate)
+
+/**
  * Data Access Object for workout logging and exercise history queries.
  *
  * Handles two primary concerns:
@@ -119,6 +127,37 @@ interface WorkoutLogDao {
     """)
     suspend fun getActiveWorkoutLog(sessionId: Long, date: LocalDate): WorkoutLogEntity?
 
+    /**
+     * Returns a finished workout log for a session on a given date.
+     * Finished means durationMinutes IS NOT NULL (the user completed the guided flow).
+     *
+     * @param sessionId The session template ID.
+     * @param date The date to check.
+     * @return The finished [WorkoutLogEntity], or null if no finished workout exists.
+     */
+    @Query("""
+        SELECT * FROM workout_logs 
+        WHERE sessionId = :sessionId AND date = :date AND durationMinutes IS NOT NULL
+        LIMIT 1
+    """)
+    suspend fun getFinishedWorkoutForSessionOnDate(sessionId: Long, date: LocalDate): WorkoutLogEntity?
+
+    /**
+     * Returns a reactive flow of (sessionId, date) pairs where workouts were fully finished
+     * for a given enrollment. Used by the Today screen to mark sessions as completed reactively.
+     *
+     * Only rows where durationMinutes IS NOT NULL are included (truly finished sessions).
+     *
+     * @param enrollmentId The enrollment to query.
+     * @return [Flow] of [WorkoutKey] pairs, ordered by date ascending.
+     */
+    @Query("""
+        SELECT sessionId, date FROM workout_logs 
+        WHERE enrollmentId = :enrollmentId AND durationMinutes IS NOT NULL
+        ORDER BY date ASC
+    """)
+    fun getFinishedWorkoutKeys(enrollmentId: Long): Flow<List<WorkoutKey>>
+
     // ── Exercise History Queries ───────────────────────────────────────────────
 
     /**
@@ -189,4 +228,4 @@ interface WorkoutLogDao {
     fun getCompletedDates(enrollmentId: Long): Flow<List<LocalDate>>
 }
 
-// End of WorkoutLogDao.kt — DAO for workout logging and cross-program exercise history.
+// End of WorkoutLogDao.kt — DAO for workout logging, completion indicators, and cross-program exercise history.

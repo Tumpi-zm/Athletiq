@@ -1,6 +1,7 @@
 package com.athletiq.app.data.repository
 
 import com.athletiq.app.data.local.dao.WorkoutLogDao
+import com.athletiq.app.data.local.dao.WorkoutKey
 import com.athletiq.app.data.local.entity.ExerciseLogEntity
 import com.athletiq.app.data.local.entity.WorkoutLogEntity
 import kotlinx.coroutines.flow.Flow
@@ -150,6 +151,28 @@ class WorkoutLogRepository @Inject constructor(
         workoutLogDao.getWorkoutLogForSessionOnDate(sessionId, date) != null
 
     /**
+     * Checks if a specific session was **fully finished** (durationMinutes != null) on a given date.
+     * Unlike [isSessionCompletedOnDate], this excludes in-progress/abandoned sessions.
+     *
+     * @param sessionId The session template ID.
+     * @param date The date to check.
+     * @return True if a finished workout log exists for this session on this date.
+     */
+    suspend fun isSessionFinishedOnDate(sessionId: Long, date: LocalDate): Boolean =
+        workoutLogDao.getFinishedWorkoutForSessionOnDate(sessionId, date) != null
+
+    /**
+     * Reactive flow of (sessionId, date) pairs for all finished workouts under an enrollment.
+     * A workout is finished when its [WorkoutLogEntity.durationMinutes] is NOT NULL.
+     * Used to mark sessions as completed on the Today screen without per-session queries.
+     *
+     * @param enrollmentId The enrollment to query.
+     * @return [Flow] of [WorkoutKey] pairs, ordered by date ascending.
+     */
+    fun getFinishedWorkoutKeys(enrollmentId: Long): Flow<List<WorkoutKey>> =
+        workoutLogDao.getFinishedWorkoutKeys(enrollmentId)
+
+    /**
      * Returns dates with completed workouts for calendar display.
      *
      * @param enrollmentId The enrollment to query.
@@ -168,4 +191,4 @@ class WorkoutLogRepository @Inject constructor(
         workoutLogDao.getCompletedSessionCount(enrollmentId)
 }
 
-// End of WorkoutLogRepository.kt — Repository for workout logging and exercise history.
+// End of WorkoutLogRepository.kt — Repository for workout logging, finished-session indicators, and exercise history.
