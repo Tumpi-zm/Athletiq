@@ -123,6 +123,9 @@ class TodayViewModel @Inject constructor(
                 // Load session details for today's selected day.
                 val sessions = loadSessionsForDay(todaySummary)
                 val allDaySessionIds = loadAllDaySessionIds(result.days)
+                // Eagerly load in-progress state so "Continue Workout" shows immediately on
+                // first render and whenever enrollment re-emits (e.g. after incrementCompletedDays).
+                val inProgressSessionIds = loadInProgressSessionIds(enrollment.id, sessions)
 
                 _uiState.value = TodayUiState.WeekView(
                     enrollment = enrollment,
@@ -138,7 +141,8 @@ class TodayViewModel @Inject constructor(
                     totalTrainingDays = totalTrainingDays,
                     currentWeekNumber = result.weekNumber,
                     totalWeeks = program.durationWeeks,
-                    allDaySessionIds = allDaySessionIds
+                    allDaySessionIds = allDaySessionIds,
+                    inProgressSessionIds = inProgressSessionIds
                 )
                 // Completion indicators will be applied on the next finishedWorkoutJob emission.
             }
@@ -166,13 +170,15 @@ class TodayViewModel @Inject constructor(
 
         viewModelScope.launch {
             val sessions = loadSessionsForDay(daySummary)
+            // Eagerly check which sessions for the newly selected day are in-progress.
+            val inProgressSessionIds = loadInProgressSessionIds(current.enrollment.id, sessions)
             val newState = current.copy(
                 selectedDayOfWeek = dayOfWeek,
                 selectedDaySessions = sessions,
                 selectedDaySummary = daySummary
             )
             _uiState.value = updateCompletedIndicators(_finishedKeys.value, newState)
-                .copy(inProgressSessionIds = current.inProgressSessionIds)
+                .copy(inProgressSessionIds = inProgressSessionIds)
         }
     }
 
@@ -195,6 +201,42 @@ class TodayViewModel @Inject constructor(
     private suspend fun loadSessionsForDay(day: WeekDaySummary): List<SessionDetail> {
         if (day.isRestDay || day.dayEntity == null) return emptyList()
         return getTodaySessionUseCase.getSessionDetailsForDay(day.dayEntity)
+    }
+
+    /**
+     * Returns the set of session IDs from [selectedDaySessions] that have been started today
+     * but not yet finished (i.e. [WorkoutLogEntity.durationMinutes] IS NULL).
+     *
+     * Uses the one-shot [WorkoutLogRepository.getActiveWorkoutLog] suspend query — the same
+     * path that [WorkoutViewModel.initWorkout] already relies on, so it is known to work.
+     */
+    private suspend fun loadInProgressSessionIds(
+        enrollmentId: Long,
+        selectedDaySessions: List<SessionDetail>
+    ): Set<Long> {
+        val today = LocalDate.now()
+        return selectedDaySessions
+            .filter { sessionDetail ->
+                workoutLogRepository.getActiveWorkoutLog(sessionDetail.session.id, today) != null
+            }
+            .map { it.session.id }
+            .toSet()
+    }
+
+    /**
+     * Re-checks which sessions are currently in-progress and updates [TodayUiState.WeekView].
+     * Call this whenever the screen becomes visible again (e.g. after navigating back from
+     * WorkoutScreen) to guarantee "Continue Workout" is shown without waiting for a Flow emission.
+     */
+    fun refreshInProgress() {
+        val current = _uiState.value as? TodayUiState.WeekView ?: return
+        viewModelScope.launch {
+            val inProgressSessionIds = loadInProgressSessionIds(
+                current.enrollment.id,
+                current.selectedDaySessions
+            )
+            _uiState.value = current.copy(inProgressSessionIds = inProgressSessionIds)
+        }
     }
 
     fun abandonProgram() {

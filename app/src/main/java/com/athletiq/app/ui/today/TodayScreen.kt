@@ -55,7 +55,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.athletiq.app.domain.model.BlockType
 import com.athletiq.app.domain.model.SessionDetail
 import com.athletiq.app.domain.usecase.AbandonProgramResult
@@ -89,6 +92,16 @@ fun TodayScreen(
     LaunchedEffect(uiState) {
         if (uiState is TodayUiState.NoActiveProgram) {
             onProgramAbandoned()
+        }
+    }
+
+    // Eagerly refresh in-progress state every time this screen comes back into view.
+    // This covers the case where the user navigates back from WorkoutScreen before Room's
+    // Flow invalidation has fired — guaranteeing "Continue Workout" is always shown correctly.
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.refreshInProgress()
         }
     }
 
